@@ -2,37 +2,24 @@
 
 import { useState } from "react";
 import {
-  LayoutDashboard,
-  Users,
-  GraduationCap,
-  BookOpen,
-  ClipboardCheck,
-  FileCheck2,
-  Wallet,
-  CalendarDays,
-  Bell,
-  Search,
-  ChevronDown,
-  ChevronRight,
-  Menu,
-  X,
-  ArrowUpRight,
   ArrowDownRight,
-  Clock3,
+  ArrowUpRight,
+  CalendarCheck,
+  CalendarDays,
   CheckCircle2,
-  AlertCircle,
-  TrendingUp,
+  ChevronRight,
+  CircleDollarSign,
+  Clock3,
+  Download,
+  FileCheck2,
+  GraduationCap,
   MoreHorizontal,
   Plus,
-  Download,
   ShieldCheck,
-  Settings,
-  LogOut,
-  UserRound,
-  Building2,
-  CreditCard,
-  CircleDollarSign,
-  CalendarCheck,
+  TrendingUp,
+  Users,
+  Wallet,
+  X,
   type LucideIcon,
 } from "lucide-react";
 
@@ -53,56 +40,6 @@ const BRAND = {
   gold: "#C9A84C",
   lime: "#A8D832",
 };
-
-type NavigationItem = {
-  label: string;
-  icon: LucideIcon;
-  section?: string;
-};
-
-const navigation: NavigationItem[] = [
-  {
-    label: "Dashboard",
-    icon: LayoutDashboard,
-    section: "Overview",
-  },
-  {
-    label: "Students",
-    icon: GraduationCap,
-    section: "School Management",
-  },
-  {
-    label: "Teachers & Staff",
-    icon: Users,
-  },
-  {
-    label: "Classes & Subjects",
-    icon: BookOpen,
-  },
-  {
-    label: "Attendance",
-    icon: ClipboardCheck,
-    section: "Daily Operations",
-  },
-  {
-    label: "Results & Reports",
-    icon: FileCheck2,
-  },
-  {
-    label: "Fees & Payments",
-    icon: Wallet,
-    section: "Finance",
-  },
-  {
-    label: "Timetable",
-    icon: CalendarDays,
-    section: "Administration",
-  },
-  {
-    label: "Settings",
-    icon: Settings,
-  },
-];
 
 const enrollmentData = [
   { month: "Jan", students: 284 },
@@ -206,154 +143,6 @@ function formatCurrency(amount: number) {
   }).format(amount);
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="mb-2 mt-6 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">
-      {children}
-    </p>
-  );
-}
-
-function Sidebar({
-  activeItem,
-  setActiveItem,
-  mobileOpen,
-  setMobileOpen,
-}: {
-  activeItem: string;
-  setActiveItem: (item: string) => void;
-  mobileOpen: boolean;
-  setMobileOpen: (open: boolean) => void;
-}) {
-  return (
-    <>
-      {mobileOpen && (
-        <button
-          type="button"
-          aria-label="Close navigation"
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[250px] flex-col bg-[#0D5C63] text-white transition-transform duration-300 lg:translate-x-0 ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex h-[84px] items-center justify-between border-b border-white/10 px-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#0D5C63]">
-              <Building2 size={22} />
-            </div>
-
-            <div>
-              <h1 className="text-[13px] font-bold leading-5">
-                Grace & Favour
-              </h1>
-              <p className="text-[10px] text-white/65">
-                School Management
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setMobileOpen(false)}
-            className="rounded-lg p-1 hover:bg-white/10 lg:hidden"
-            aria-label="Close sidebar"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="mx-4 mt-5 rounded-xl border border-white/10 bg-white/[0.07] p-3">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#C9A84C] text-[#153F40]">
-              <ShieldCheck size={19} />
-            </div>
-
-            <div className="min-w-0">
-              <p className="truncate text-xs font-semibold">
-                Administrator
-              </p>
-              <p className="mt-0.5 text-[10px] text-white/55">
-                Super Admin access
-              </p>
-            </div>
-
-            <ChevronDown size={15} className="ml-auto text-white/50" />
-          </div>
-        </div>
-
-        <nav className="flex-1 overflow-y-auto px-3 pb-5">
-          {navigation.map((item) => {
-            const Icon = item.icon;
-            const active = activeItem === item.label;
-
-            return (
-              <div key={item.label}>
-                {item.section && <SectionLabel>{item.section}</SectionLabel>}
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveItem(item.label);
-                    setMobileOpen(false);
-                  }}
-                  className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-[12px] font-medium transition ${
-                    active
-                      ? "bg-white text-[#0D5C63] shadow-lg shadow-black/5"
-                      : "text-white/75 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  <Icon size={17} strokeWidth={active ? 2.3 : 1.8} />
-
-                  <span className="flex-1">{item.label}</span>
-
-                  {item.label === "Results & Reports" && (
-                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#C9A84C] px-1 text-[10px] font-bold text-[#153F40]">
-                      3
-                    </span>
-                  )}
-
-                  {active && (
-                    <ChevronRight size={14} className="opacity-60" />
-                  )}
-                </button>
-              </div>
-            );
-          })}
-        </nav>
-
-        <div className="border-t border-white/10 p-4">
-          <div className="rounded-xl bg-white/[0.07] p-3">
-            <div className="mb-2 flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-[#A8D832]" />
-              <span className="text-[10px] font-semibold text-white/80">
-                Academic session
-              </span>
-            </div>
-
-            <p className="text-xs font-bold">2026 / 2027</p>
-            <p className="mt-1 text-[10px] text-white/55">
-              First Term
-            </p>
-          </div>
-
-          <button
-            type="button"
-            className="mt-3 flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-xs text-white/65 transition hover:bg-white/10 hover:text-white"
-          >
-            <LogOut size={16} />
-            Sign out
-          </button>
-        </div>
-      </aside>
-    </>
-  );
-}
-
 function StatCard({
   title,
   value,
@@ -378,7 +167,6 @@ function StatCard({
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs font-medium text-[#77817E]">{title}</p>
-
           <h3 className="mt-3 text-[25px] font-bold tracking-tight text-[#192F30] sm:text-[28px]">
             {value}
           </h3>
@@ -386,10 +174,7 @@ function StatCard({
 
         <div
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
-          style={{
-            backgroundColor: iconBackground,
-            color: iconColor,
-          }}
+          style={{ backgroundColor: iconBackground, color: iconColor }}
         >
           <Icon size={21} strokeWidth={1.8} />
         </div>
@@ -403,15 +188,9 @@ function StatCard({
               : "bg-[#FCEAE7] text-[#B84E40]"
           }`}
         >
-          {positive ? (
-            <ArrowUpRight size={12} />
-          ) : (
-            <ArrowDownRight size={12} />
-          )}
-
+          {positive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
           {change}
         </span>
-
         <span className="text-[10px] text-[#89918E]">{description}</span>
       </div>
     </div>
@@ -432,7 +211,6 @@ function ChartTooltip({
   return (
     <div className="rounded-xl border border-[#E7EBE7] bg-white px-3 py-2 shadow-lg">
       <p className="mb-1 text-[11px] text-[#7C8783]">{label}</p>
-
       {payload.map((item, index) => (
         <p key={index} className="text-xs font-bold text-[#0D5C63]">
           {item.name === "students"
@@ -454,24 +232,12 @@ function EnrollmentChart() {
         >
           <defs>
             <linearGradient id="enrollmentGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop
-                offset="0%"
-                stopColor={BRAND.teal}
-                stopOpacity={0.18}
-              />
-              <stop
-                offset="95%"
-                stopColor={BRAND.teal}
-                stopOpacity={0}
-              />
+              <stop offset="0%" stopColor={BRAND.teal} stopOpacity={0.18} />
+              <stop offset="95%" stopColor={BRAND.teal} stopOpacity={0} />
             </linearGradient>
           </defs>
 
-          <CartesianGrid
-            vertical={false}
-            stroke="#EEF1ED"
-            strokeDasharray="4 4"
-          />
+          <CartesianGrid vertical={false} stroke="#EEF1ED" strokeDasharray="4 4" />
 
           <XAxis
             dataKey="month"
@@ -520,11 +286,7 @@ function AttendanceChart() {
           margin={{ top: 8, right: 0, left: -28, bottom: 0 }}
           barGap={6}
         >
-          <CartesianGrid
-            vertical={false}
-            stroke="#EEF1ED"
-            strokeDasharray="4 4"
-          />
+          <CartesianGrid vertical={false} stroke="#EEF1ED" strokeDasharray="4 4" />
 
           <XAxis
             dataKey="day"
@@ -565,7 +327,7 @@ function AttendanceChart() {
   );
 }
 
-function TaskList() {
+function TaskList({ onSelect }: { onSelect: (title: string) => void }) {
   return (
     <div className="space-y-4">
       {pendingTasks.map((task) => {
@@ -575,23 +337,18 @@ function TaskList() {
           <button
             key={task.title}
             type="button"
+            onClick={() => onSelect(task.title)}
             className="group flex w-full items-center gap-3 rounded-xl p-2 text-left transition hover:bg-[#F7F9F6]"
           >
             <div
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-              style={{
-                backgroundColor: task.color,
-                color: task.iconColor,
-              }}
+              style={{ backgroundColor: task.color, color: task.iconColor }}
             >
               <Icon size={18} />
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-[#253B39]">
-                {task.title}
-              </p>
-
+              <p className="text-xs font-semibold text-[#253B39]">{task.title}</p>
               <p className="mt-1 text-[10px] leading-4 text-[#8A9590]">
                 {task.description}
               </p>
@@ -612,617 +369,469 @@ function TaskList() {
   );
 }
 
-export default function AdminDashboard() {
-  const [activeItem, setActiveItem] = useState("Dashboard");
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [search, setSearch] = useState("");
+export default function AdminDashboard({
+  term,
+}: {
+  term: { sessionName: string; termName: string } | null;
+}) {
   const [period, setPeriod] = useState("This academic year");
   const [notice, setNotice] = useState("");
 
-  function handleNavigation(item: string) {
-    setActiveItem(item);
-
-    if (item !== "Dashboard") {
-      setNotice(
-        `${item} will be connected when we implement that module.`
-      );
-    } else {
-      setNotice("");
-    }
+  function comingSoon(feature: string) {
+    setNotice(`${feature} will be connected when we build that module.`);
   }
 
   return (
-    <div className="min-h-screen bg-[#F6F8F5] text-[#203432]">
-      <Sidebar
-        activeItem={activeItem}
-        setActiveItem={handleNavigation}
-        mobileOpen={mobileOpen}
-        setMobileOpen={setMobileOpen}
-      />
+    <div className="mx-auto max-w-[1600px] px-4 py-6 sm:px-7 sm:py-8 xl:px-9">
+      {/* Welcome section */}
+      <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <p className="text-xs font-medium text-[#84908A]">
+            Friday, October 9, 2026
+          </p>
 
-      <div className="min-h-screen lg:pl-[250px]">
-        {/* Top header */}
-        <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between gap-4 border-b border-[#E8ECE7] bg-white/95 px-4 backdrop-blur-md sm:px-7 xl:px-9">
-          <div className="flex min-w-0 items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setMobileOpen(true)}
-              className="rounded-lg border border-[#E8ECE7] p-2 text-[#36514C] lg:hidden"
-              aria-label="Open navigation"
-            >
-              <Menu size={20} />
-            </button>
+          <h1 className="mt-2 text-[25px] font-bold tracking-tight text-[#1C3532] sm:text-[30px]">
+            Good evening, Administrator <span aria-hidden="true">👋</span>
+          </h1>
 
-            <div className="min-w-0">
-              <p className="hidden text-[10px] font-medium text-[#89938E] sm:block">
-                Grace & Favour Model School
-              </p>
+          <p className="mt-2 max-w-xl text-xs leading-6 text-[#7D8983] sm:text-sm">
+            Here's what's happening at your school. Let's keep everything
+            running smoothly.
+          </p>
+        </div>
 
-              <h2 className="truncate text-base font-bold text-[#203432] sm:mt-1 sm:text-lg">
-                {activeItem}
-              </h2>
-            </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => comingSoon("Report export")}
+            className="inline-flex items-center gap-2 rounded-xl border border-[#E2E8E1] bg-white px-4 py-2.5 text-xs font-semibold text-[#40534C] transition hover:bg-[#F8FAF7]"
+          >
+            <Download size={15} />
+            Export report
+          </button>
+
+          <button
+            type="button"
+            onClick={() => comingSoon("Student registration")}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#0D5C63] px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-[#09494F]"
+          >
+            <Plus size={15} />
+            Add student
+          </button>
+        </div>
+      </div>
+
+      {notice && (
+        <div
+          role="status"
+          className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-[#D5E7DD] bg-[#F0F8F3] px-4 py-3 text-xs text-[#245D43]"
+        >
+          <span>{notice}</span>
+          <button
+            type="button"
+            onClick={() => setNotice("")}
+            aria-label="Dismiss notification"
+          >
+            <X size={15} />
+          </button>
+        </div>
+      )}
+
+      {/* Academic session banner */}
+      <div className="mb-6 flex flex-col justify-between gap-3 rounded-2xl border border-[#E0E9DE] bg-white p-4 sm:flex-row sm:items-center sm:px-5">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E6F0EC] text-[#0D5C63]">
+            <CalendarDays size={19} />
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div className="hidden items-center gap-2 rounded-xl border border-[#E7EBE6] bg-[#FAFBF9] px-3 py-2.5 md:flex">
-              <Search size={16} className="text-[#8C9791]" />
-
-              <input
-                type="search"
-                placeholder="Search anything..."
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                className="w-36 bg-transparent text-xs outline-none placeholder:text-[#A2AAA5] lg:w-48"
-              />
-
-              <kbd className="rounded border border-[#E4E8E2] bg-white px-1.5 py-0.5 text-[9px] text-[#929A95]">
-                /
-              </kbd>
-            </div>
-
-            <button
-              type="button"
-              onClick={() =>
-                setNotice("You are all caught up with notifications.")
-              }
-              className="relative rounded-xl border border-[#E7EBE6] p-2.5 text-[#53645D] transition hover:bg-[#F6F8F5]"
-              aria-label="Notifications"
-            >
-              <Bell size={18} />
-
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full border-2 border-white bg-[#D69A32]" />
-            </button>
-
-            <div className="hidden h-8 w-px bg-[#E8ECE7] sm:block" />
-
-            <button
-              type="button"
-              onClick={() =>
-                setNotice("Account settings will be implemented later.")
-              }
-              className="flex items-center gap-2"
-            >
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#DCEBE8] text-[#0D5C63]">
-                <UserRound size={18} />
-              </div>
-
-              <div className="hidden text-left sm:block">
-                <p className="text-xs font-bold text-[#293D39]">
-                  School Owner
-                </p>
-                <p className="mt-0.5 text-[10px] text-[#89938E]">
-                  Super Admin
-                </p>
-              </div>
-
-              <ChevronDown
-                size={14}
-                className="hidden text-[#8C9791] sm:block"
-              />
-            </button>
+          <div>
+            <p className="text-xs font-bold text-[#263F39]">
+              {term
+                ? `${term.sessionName.replace("/", " / ")} Academic Session`
+                : "No current academic session"}
+            </p>
+            <p className="mt-1 text-[10px] text-[#85918A]">
+              {term
+                ? `${term.termName} · Academic overview`
+                : "Set a current term in Academic Sessions"}
+            </p>
           </div>
-        </header>
+        </div>
 
-        <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-7 sm:py-8 xl:px-9">
-          {/* Welcome section */}
-          <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-[#6DA77D]" />
+          <span className="text-[10px] font-semibold text-[#53745D]">
+            Session active
+          </span>
+
+          <div className="ml-2 h-5 w-px bg-[#E6EBE4]" />
+
+          <select
+            value={period}
+            onChange={(event) => setPeriod(event.target.value)}
+            className="max-w-[155px] cursor-pointer bg-transparent py-1 text-[11px] font-semibold text-[#465A51] outline-none"
+            aria-label="Analytics period"
+          >
+            <option>This academic year</option>
+            <option>This term</option>
+            <option>Last 30 days</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Main statistics */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          title="Total students"
+          value="382"
+          change="+8.4%"
+          description="vs previous session"
+          icon={GraduationCap}
+          iconBackground="#E3F0ED"
+          iconColor="#0D5C63"
+        />
+
+        <StatCard
+          title="Teachers & staff"
+          value="24"
+          change="+2"
+          description="new this session"
+          icon={Users}
+          iconBackground="#E9E7FA"
+          iconColor="#6557A7"
+        />
+
+        <StatCard
+          title="Fees collected"
+          value="₦18.4M"
+          change="+12.6%"
+          description="vs previous term"
+          icon={CircleDollarSign}
+          iconBackground="#F9EED5"
+          iconColor="#99721D"
+        />
+
+        <StatCard
+          title="Attendance today"
+          value="93.2%"
+          change="-1.8%"
+          description="vs yesterday"
+          icon={CalendarCheck}
+          positive={false}
+          iconBackground="#E4F0E2"
+          iconColor="#4E8148"
+        />
+      </div>
+
+      {/* Analytics charts */}
+      <div className="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-[1.45fr_1fr]">
+        <section className="min-w-0 rounded-2xl border border-[#E8ECE7] bg-white p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-medium text-[#84908A]">
-                Friday, October 9, 2026
-              </p>
-
-              <h1 className="mt-2 text-[25px] font-bold tracking-tight text-[#1C3532] sm:text-[30px]">
-                Good evening, Administrator{" "}
-                <span aria-hidden="true">👋</span>
-              </h1>
-
-              <p className="mt-2 max-w-xl text-xs leading-6 text-[#7D8983] sm:text-sm">
-                Here's what's happening at your school. Let's keep everything
-                running smoothly.
+              <h3 className="text-sm font-bold text-[#253D38]">
+                Student enrollment
+              </h3>
+              <p className="mt-1 text-[11px] text-[#89938E]">
+                Enrollment overview across the academic year
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={() =>
-                  setNotice("Report export will be connected to real school data.")
-                }
-                className="inline-flex items-center gap-2 rounded-xl border border-[#E2E8E1] bg-white px-4 py-2.5 text-xs font-semibold text-[#40534C] transition hover:bg-[#F8FAF7]"
-              >
-                <Download size={15} />
-                Export report
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setNotice("Student registration will be implemented next.")
-                }
-                className="inline-flex items-center gap-2 rounded-xl bg-[#0D5C63] px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-[#09494F]"
-              >
-                <Plus size={15} />
-                Add student
-              </button>
-            </div>
-          </div>
-
-          {notice && (
-            <div
-              role="status"
-              className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-[#D5E7DD] bg-[#F0F8F3] px-4 py-3 text-xs text-[#245D43]"
+            <button
+              type="button"
+              aria-label="Enrollment chart options"
+              onClick={() => comingSoon("Enrollment chart options")}
+              className="rounded-lg p-1.5 text-[#89938E] hover:bg-[#F5F7F3]"
             >
-              <span>{notice}</span>
+              <MoreHorizontal size={19} />
+            </button>
+          </div>
 
-              <button
-                type="button"
-                onClick={() => setNotice("")}
-                aria-label="Dismiss notification"
-              >
-                <X size={15} />
-              </button>
-            </div>
-          )}
-
-          {/* Academic session banner */}
-          <div className="mb-6 flex flex-col justify-between gap-3 rounded-2xl border border-[#E0E9DE] bg-white p-4 sm:flex-row sm:items-center sm:px-5">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E6F0EC] text-[#0D5C63]">
-                <CalendarDays size={19} />
-              </div>
-
-              <div>
-                <p className="text-xs font-bold text-[#263F39]">
-                  2026 / 2027 Academic Session
-                </p>
-                <p className="mt-1 text-[10px] text-[#85918A]">
-                  First Term · Academic overview
-                </p>
-              </div>
+          <div className="mt-6 flex items-end justify-between gap-3">
+            <div>
+              <h4 className="text-[26px] font-bold tracking-tight text-[#203B36]">
+                382
+              </h4>
+              <p className="mt-1 text-[10px] text-[#87938C]">
+                Total enrolled students
+              </p>
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#6DA77D]" />
+            <span className="mb-1 inline-flex items-center gap-1 text-[10px] font-bold text-[#348257]">
+              <TrendingUp size={13} />
+              Growing enrollment
+            </span>
+          </div>
 
-              <span className="text-[10px] font-semibold text-[#53745D]">
-                Session active
-              </span>
+          <div className="mt-4">
+            <EnrollmentChart />
+          </div>
+        </section>
 
-              <div className="ml-2 h-5 w-px bg-[#E6EBE4]" />
+        <section className="min-w-0 rounded-2xl border border-[#E8ECE7] bg-white p-5 sm:p-6">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-bold text-[#253D38]">
+                Weekly attendance
+              </h3>
+              <p className="mt-1 text-[11px] text-[#89938E]">
+                Student attendance this week
+              </p>
+            </div>
 
-              <select
-                value={period}
-                onChange={(event) => setPeriod(event.target.value)}
-                className="max-w-[155px] cursor-pointer bg-transparent py-1 text-[11px] font-semibold text-[#465A51] outline-none"
-                aria-label="Analytics period"
-              >
-                <option>This academic year</option>
-                <option>This term</option>
-                <option>Last 30 days</option>
-              </select>
+            <span className="rounded-lg bg-[#E7F2EC] px-2.5 py-1.5 text-[10px] font-bold text-[#39734F]">
+              93.2% avg.
+            </span>
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#0D5C63]" />
+              <span className="text-[10px] text-[#78857E]">Present</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#C9A84C]" />
+              <span className="text-[10px] text-[#78857E]">Absent</span>
             </div>
           </div>
 
-          {/* Main statistics */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard
-              title="Total students"
-              value="382"
-              change="+8.4%"
-              description="vs previous session"
-              icon={GraduationCap}
-              iconBackground="#E3F0ED"
-              iconColor="#0D5C63"
-            />
-
-            <StatCard
-              title="Teachers & staff"
-              value="24"
-              change="+2"
-              description="new this session"
-              icon={Users}
-              iconBackground="#E9E7FA"
-              iconColor="#6557A7"
-            />
-
-            <StatCard
-              title="Fees collected"
-              value="₦18.4M"
-              change="+12.6%"
-              description="vs previous term"
-              icon={CircleDollarSign}
-              iconBackground="#F9EED5"
-              iconColor="#99721D"
-            />
-
-            <StatCard
-              title="Attendance today"
-              value="93.2%"
-              change="-1.8%"
-              description="vs yesterday"
-              icon={CalendarCheck}
-              positive={false}
-              iconBackground="#E4F0E2"
-              iconColor="#4E8148"
-            />
+          <div className="mt-4">
+            <AttendanceChart />
           </div>
 
-          {/* Analytics charts */}
-          <div className="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-[1.45fr_1fr]">
-            <section className="min-w-0 rounded-2xl border border-[#E8ECE7] bg-white p-5 sm:p-6">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <h3 className="text-sm font-bold text-[#253D38]">
-                    Student enrollment
-                  </h3>
+          <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#F6F8F5] p-3">
+            <CheckCircle2 size={17} className="shrink-0 text-[#43845A]" />
+            <p className="text-[10px] leading-5 text-[#64746A]">
+              Attendance data will be connected to daily teacher submissions.
+            </p>
+          </div>
+        </section>
+      </div>
 
-                  <p className="mt-1 text-[11px] text-[#89938E]">
-                    Enrollment overview across the academic year
-                  </p>
+      {/* Class distribution and administrative tasks */}
+      <div className="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+        <section className="rounded-2xl border border-[#E8ECE7] bg-white p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-bold text-[#253D38]">
+                Students by class
+              </h3>
+              <p className="mt-1 text-[11px] text-[#89938E]">
+                Enrollment distribution across classes
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => comingSoon("The classes page")}
+              className="text-[11px] font-bold text-[#0D5C63] hover:underline"
+            >
+              View classes
+            </button>
+          </div>
+
+          <div className="mt-5 space-y-4">
+            {classData.map((item) => {
+              const percentage = (item.students / 45) * 100;
+
+              return (
+                <div key={item.name}>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-[11px] font-medium text-[#64716B]">
+                      {item.name}
+                    </span>
+                    <span className="text-[11px] font-bold text-[#334A42]">
+                      {item.students}{" "}
+                      <span className="font-normal text-[#9AA39D]">students</span>
+                    </span>
+                  </div>
+
+                  <div className="h-2 overflow-hidden rounded-full bg-[#EEF1EC]">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${percentage}%`,
+                        backgroundColor:
+                          item.name === "Primary 1" || item.name === "Primary 4"
+                            ? BRAND.gold
+                            : BRAND.teal,
+                      }}
+                    />
+                  </div>
                 </div>
+              );
+            })}
+          </div>
+        </section>
 
-                <button
-                  type="button"
-                  aria-label="Enrollment chart options"
-                  onClick={() =>
-                    setNotice("Enrollment chart options will be available later.")
-                  }
-                  className="rounded-lg p-1.5 text-[#89938E] hover:bg-[#F5F7F3]"
+        <section className="rounded-2xl border border-[#E8ECE7] bg-white p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-bold text-[#253D38]">
+                Pending actions
+              </h3>
+              <p className="mt-1 text-[11px] text-[#89938E]">
+                Items that need your attention
+              </p>
+            </div>
+
+            <span className="rounded-lg bg-[#FFF1D7] px-2.5 py-1.5 text-[10px] font-bold text-[#936818]">
+              6 pending
+            </span>
+          </div>
+
+          <div className="mt-5">
+            <TaskList onSelect={comingSoon} />
+          </div>
+
+          <div className="mt-5 border-t border-[#EDF0EB] pt-4">
+            <button
+              type="button"
+              onClick={() => comingSoon("The task centre")}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#E1E8E0] py-3 text-[11px] font-bold text-[#0D5C63] transition hover:bg-[#F5F8F4]"
+            >
+              View all tasks
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </section>
+      </div>
+
+      {/* Recent payments */}
+      <section className="mt-6 overflow-hidden rounded-2xl border border-[#E8ECE7] bg-white">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#EDF0EB] px-5 py-5 sm:px-6">
+          <div>
+            <h3 className="text-sm font-bold text-[#253D38]">
+              Recent fee payments
+            </h3>
+            <p className="mt-1 text-[11px] text-[#89938E]">
+              Overview of recently submitted payment records
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => comingSoon("The payments page")}
+            className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0D5C63] hover:underline"
+          >
+            View all payments
+            <ArrowUpRight size={13} />
+          </button>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[650px] border-collapse text-left">
+            <thead>
+              <tr className="bg-[#FAFBF9]">
+                {["Guardian / Student", "Reference", "Amount", "Date", "Status", "Action"].map(
+                  (heading) => (
+                    <th
+                      key={heading}
+                      className="px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[#8B9690]"
+                    >
+                      {heading}
+                    </th>
+                  ),
+                )}
+              </tr>
+            </thead>
+
+            <tbody>
+              {recentPayments.map((payment) => (
+                <tr
+                  key={payment.reference}
+                  className="border-t border-[#F0F2EE] transition hover:bg-[#FCFDFB]"
                 >
-                  <MoreHorizontal size={19} />
-                </button>
-              </div>
-
-              <div className="mt-6 flex items-end justify-between gap-3">
-                <div>
-                  <h4 className="text-[26px] font-bold tracking-tight text-[#203B36]">
-                    382
-                  </h4>
-
-                  <p className="mt-1 text-[10px] text-[#87938C]">
-                    Total enrolled students
-                  </p>
-                </div>
-
-                <span className="mb-1 inline-flex items-center gap-1 text-[10px] font-bold text-[#348257]">
-                  <TrendingUp size={13} />
-                  Growing enrollment
-                </span>
-              </div>
-
-              <div className="mt-4">
-                <EnrollmentChart />
-              </div>
-            </section>
-
-            <section className="min-w-0 rounded-2xl border border-[#E8ECE7] bg-white p-5 sm:p-6">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="text-sm font-bold text-[#253D38]">
-                    Weekly attendance
-                  </h3>
-
-                  <p className="mt-1 text-[11px] text-[#89938E]">
-                    Student attendance this week
-                  </p>
-                </div>
-
-                <span className="rounded-lg bg-[#E7F2EC] px-2.5 py-1.5 text-[10px] font-bold text-[#39734F]">
-                  93.2% avg.
-                </span>
-              </div>
-
-              <div className="mt-6 flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-[#0D5C63]" />
-                  <span className="text-[10px] text-[#78857E]">Present</span>
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-[#C9A84C]" />
-                  <span className="text-[10px] text-[#78857E]">Absent</span>
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <AttendanceChart />
-              </div>
-
-              <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#F6F8F5] p-3">
-                <CheckCircle2
-                  size={17}
-                  className="shrink-0 text-[#43845A]"
-                />
-
-                <p className="text-[10px] leading-5 text-[#64746A]">
-                  Attendance data will be connected to daily teacher
-                  submissions.
-                </p>
-              </div>
-            </section>
-          </div>
-
-          {/* Class distribution and administrative tasks */}
-          <div className="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-[1.1fr_0.9fr]">
-            <section className="rounded-2xl border border-[#E8ECE7] bg-white p-5 sm:p-6">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <h3 className="text-sm font-bold text-[#253D38]">
-                    Students by class
-                  </h3>
-
-                  <p className="mt-1 text-[11px] text-[#89938E]">
-                    Enrollment distribution across classes
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => handleNavigation("Students")}
-                  className="text-[11px] font-bold text-[#0D5C63] hover:underline"
-                >
-                  View classes
-                </button>
-              </div>
-
-              <div className="mt-5 space-y-4">
-                {classData.map((item) => {
-                  const percentage = (item.students / 45) * 100;
-
-                  return (
-                    <div key={item.name}>
-                      <div className="mb-2 flex items-center justify-between">
-                        <span className="text-[11px] font-medium text-[#64716B]">
-                          {item.name}
-                        </span>
-
-                        <span className="text-[11px] font-bold text-[#334A42]">
-                          {item.students}{" "}
-                          <span className="font-normal text-[#9AA39D]">
-                            students
-                          </span>
-                        </span>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
+                        style={{
+                          backgroundColor: payment.color,
+                          color: payment.textColor,
+                        }}
+                      >
+                        {payment.initials}
                       </div>
-
-                      <div className="h-2 overflow-hidden rounded-full bg-[#EEF1EC]">
-                        <div
-                          className="h-full rounded-full transition-all duration-500"
-                          style={{
-                            width: `${percentage}%`,
-                            backgroundColor:
-                              item.name === "Primary 1" ||
-                              item.name === "Primary 4"
-                                ? BRAND.gold
-                                : BRAND.teal,
-                          }}
-                        />
+                      <div>
+                        <p className="text-xs font-semibold text-[#344841]">
+                          {payment.name}
+                        </p>
+                        <p className="mt-1 text-[10px] text-[#929B95]">
+                          Fee payment
+                        </p>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </section>
+                  </td>
 
-            <section className="rounded-2xl border border-[#E8ECE7] bg-white p-5 sm:p-6">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <h3 className="text-sm font-bold text-[#253D38]">
-                    Pending actions
-                  </h3>
+                  <td className="px-6 py-4 text-[11px] text-[#75827A]">
+                    {payment.reference}
+                  </td>
 
-                  <p className="mt-1 text-[11px] text-[#89938E]">
-                    Items that need your attention
-                  </p>
-                </div>
+                  <td className="px-6 py-4 text-xs font-bold text-[#344841]">
+                    {formatCurrency(payment.amount)}
+                  </td>
 
-                <span className="rounded-lg bg-[#FFF1D7] px-2.5 py-1.5 text-[10px] font-bold text-[#936818]">
-                  6 pending
-                </span>
-              </div>
+                  <td className="px-6 py-4 text-[11px] text-[#75827A]">
+                    {payment.date}
+                  </td>
 
-              <div className="mt-5">
-                <TaskList />
-              </div>
-
-              <div className="mt-5 border-t border-[#EDF0EB] pt-4">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setNotice("The complete administrative task centre is coming next.")
-                  }
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#E1E8E0] py-3 text-[11px] font-bold text-[#0D5C63] transition hover:bg-[#F5F8F4]"
-                >
-                  View all tasks
-                  <ChevronRight size={14} />
-                </button>
-              </div>
-            </section>
-          </div>
-
-          {/* Recent payments */}
-          <section className="mt-6 overflow-hidden rounded-2xl border border-[#E8ECE7] bg-white">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#EDF0EB] px-5 py-5 sm:px-6">
-              <div>
-                <h3 className="text-sm font-bold text-[#253D38]">
-                  Recent fee payments
-                </h3>
-
-                <p className="mt-1 text-[11px] text-[#89938E]">
-                  Overview of recently submitted payment records
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => handleNavigation("Fees & Payments")}
-                className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0D5C63] hover:underline"
-              >
-                View all payments
-                <ArrowUpRight size={13} />
-              </button>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[650px] border-collapse text-left">
-                <thead>
-                  <tr className="bg-[#FAFBF9]">
-                    <th className="px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[#8B9690]">
-                      Guardian / Student
-                    </th>
-
-                    <th className="px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[#8B9690]">
-                      Reference
-                    </th>
-
-                    <th className="px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[#8B9690]">
-                      Amount
-                    </th>
-
-                    <th className="px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[#8B9690]">
-                      Date
-                    </th>
-
-                    <th className="px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[#8B9690]">
-                      Status
-                    </th>
-
-                    <th className="px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[#8B9690]">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {recentPayments.map((payment) => (
-                    <tr
-                      key={payment.reference}
-                      className="border-t border-[#F0F2EE] transition hover:bg-[#FCFDFB]"
+                  <td className="px-6 py-4">
+                    <span
+                      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[10px] font-semibold"
+                      style={{
+                        backgroundColor: payment.color,
+                        color: payment.textColor,
+                      }}
                     >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
-                            style={{
-                              backgroundColor: payment.color,
-                              color: payment.textColor,
-                            }}
-                          >
-                            {payment.initials}
-                          </div>
+                      {payment.status === "Verified" ? (
+                        <CheckCircle2 size={12} />
+                      ) : (
+                        <Clock3 size={12} />
+                      )}
+                      {payment.status}
+                    </span>
+                  </td>
 
-                          <div>
-                            <p className="text-xs font-semibold text-[#344841]">
-                              {payment.name}
-                            </p>
+                  <td className="px-6 py-4">
+                    <button
+                      type="button"
+                      onClick={() => comingSoon("Payment verification")}
+                      className="rounded-lg p-2 text-[#7D8A82] transition hover:bg-[#EAF2ED] hover:text-[#0D5C63]"
+                      aria-label={`View payment ${payment.reference}`}
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-                            <p className="mt-1 text-[10px] text-[#929B95]">
-                              Fee payment
-                            </p>
-                          </div>
-                        </div>
-                      </td>
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#EDF0EB] px-5 py-4 sm:px-6">
+          <p className="text-[10px] text-[#89938E]">
+            Showing 3 sample payment records
+          </p>
+          <button
+            type="button"
+            onClick={() => comingSoon("Payment history")}
+            className="text-[10px] font-bold text-[#0D5C63] hover:underline"
+          >
+            View payment history
+          </button>
+        </div>
+      </section>
 
-                      <td className="px-6 py-4 text-[11px] text-[#75827A]">
-                        {payment.reference}
-                      </td>
-
-                      <td className="px-6 py-4 text-xs font-bold text-[#344841]">
-                        {formatCurrency(payment.amount)}
-                      </td>
-
-                      <td className="px-6 py-4 text-[11px] text-[#75827A]">
-                        {payment.date}
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <span
-                          className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[10px] font-semibold"
-                          style={{
-                            backgroundColor: payment.color,
-                            color: payment.textColor,
-                          }}
-                        >
-                          {payment.status === "Verified" ? (
-                            <CheckCircle2 size={12} />
-                          ) : (
-                            <Clock3 size={12} />
-                          )}
-
-                          {payment.status}
-                        </span>
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setNotice(
-                              `Payment ${payment.reference} will be connected to payment verification.`
-                            )
-                          }
-                          className="rounded-lg p-2 text-[#7D8A82] transition hover:bg-[#EAF2ED] hover:text-[#0D5C63]"
-                          aria-label={`View payment ${payment.reference}`}
-                        >
-                          <ChevronRight size={16} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#EDF0EB] px-5 py-4 sm:px-6">
-              <p className="text-[10px] text-[#89938E]">
-                Showing 3 sample payment records
-              </p>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setNotice("Payment history will use verified database records.")
-                }
-                className="text-[10px] font-bold text-[#0D5C63] hover:underline"
-              >
-                View payment history
-              </button>
-            </div>
-          </section>
-
-          {/* Footer */}
-          <footer className="mt-8 flex flex-col items-center justify-between gap-2 pb-5 text-center sm:flex-row sm:text-left">
-            <p className="text-[10px] text-[#929B95]">
-              © 2026 Grace & Favour Model School
-            </p>
-
-            <p className="flex items-center gap-1.5 text-[10px] text-[#929B95]">
-              <ShieldCheck size={13} className="text-[#0D5C63]" />
-              School administration workspace
-            </p>
-          </footer>
-        </main>
-      </div>
+      {/* Footer */}
+      <footer className="mt-8 flex flex-col items-center justify-between gap-2 pb-5 text-center sm:flex-row sm:text-left">
+        <p className="text-[10px] text-[#929B95]">
+          © 2026 Grace & Favour Model School
+        </p>
+        <p className="flex items-center gap-1.5 text-[10px] text-[#929B95]">
+          <ShieldCheck size={13} className="text-[#0D5C63]" />
+          School administration workspace
+        </p>
+      </footer>
     </div>
   );
 }

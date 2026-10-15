@@ -1,33 +1,12 @@
 export const instant = false;
 
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { requirePageAccess } from "@/lib/auth/access";
+import { getCurrentTerm } from "@/lib/academic/current-term";
 import AdminDashboard from "@/components/dashboard/admin-dashboard";
 
 export default async function AdminPage() {
-  const supabase = await createClient();
+  await requirePageAccess("super_admin");
+  const term = await getCurrentTerm();
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    redirect("/login");
-  }
-
-  const { data: roles, error: roleError } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", user.id);
-
-  if (roleError) {
-    throw new Error("Unable to verify your school permissions.");
-  }
-
-  if (!roles?.some((item) => item.role === "super_admin")) {
-    redirect("/unauthorized");
-  }
-
-  return <AdminDashboard />;
+  return <AdminDashboard term={term} />;
 }
