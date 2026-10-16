@@ -22,6 +22,7 @@ import {
   Users,
   Wallet,
   X,
+  Library,
   type LucideIcon,
 } from "lucide-react";
 
@@ -35,9 +36,15 @@ type NavigationItem = {
 // Items without an href are modules we haven't built yet.
 const navigation: NavigationItem[] = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin", section: "Overview" },
-  { label: "Students", icon: GraduationCap, section: "School Management" },
+  {
+    label: "Students",
+    icon: GraduationCap,
+    href: "/admin/students",
+    section: "School Management",
+  },
   { label: "Teachers & Staff", icon: Users, href: "/admin/staff" },
-  { label: "Classes & Subjects", icon: BookOpen },
+  { label: "Classes", icon: BookOpen, href: "/admin/classes" },
+  { label: "Subjects", icon: Library, href: "/admin/subjects" },
   { label: "Attendance", icon: ClipboardCheck, section: "Daily Operations" },
   { label: "Results & Reports", icon: FileCheck2 },
   { label: "Fees & Payments", icon: Wallet, section: "Finance" },
