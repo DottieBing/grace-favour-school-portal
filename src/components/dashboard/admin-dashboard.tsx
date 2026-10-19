@@ -182,7 +182,7 @@ function StatCard({
 
       <div className="mt-4 flex flex-wrap items-center gap-1.5">
         <span
-          className={`inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[10px] font-bold ${
+          className={`inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-xs font-bold ${
             positive
               ? "bg-[#E5F5EB] text-[#24784B]"
               : "bg-[#FCEAE7] text-[#B84E40]"
@@ -191,7 +191,7 @@ function StatCard({
           {positive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
           {change}
         </span>
-        <span className="text-[10px] text-[#89918E]">{description}</span>
+        <span className="text-xs text-[#89918E]">{description}</span>
       </div>
     </div>
   );
@@ -210,7 +210,7 @@ function ChartTooltip({
 
   return (
     <div className="rounded-xl border border-[#E7EBE7] bg-white px-3 py-2 shadow-lg">
-      <p className="mb-1 text-[11px] text-[#7C8783]">{label}</p>
+      <p className="mb-1 text-xs text-[#7C8783]">{label}</p>
       {payload.map((item, index) => (
         <p key={index} className="text-xs font-bold text-[#0D5C63]">
           {item.name === "students"
@@ -349,12 +349,12 @@ function TaskList({ onSelect }: { onSelect: (title: string) => void }) {
 
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold text-[#253B39]">{task.title}</p>
-              <p className="mt-1 text-[10px] leading-4 text-[#8A9590]">
+              <p className="mt-1 text-xs leading-4 text-[#8A9590]">
                 {task.description}
               </p>
             </div>
 
-            <div className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#F1F3EF] px-1.5 text-[10px] font-bold text-[#596660]">
+            <div className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#F1F3EF] px-1.5 text-xs font-bold text-[#596660]">
               {task.count}
             </div>
 
@@ -450,7 +450,7 @@ export default function AdminDashboard({
                 ? `${term.sessionName.replace("/", " / ")} Academic Session`
                 : "No current academic session"}
             </p>
-            <p className="mt-1 text-[10px] text-[#85918A]">
+            <p className="mt-1 text-xs text-[#85918A]">
               {term
                 ? `${term.termName} · Academic overview`
                 : "Set a current term in Academic Sessions"}
@@ -460,7 +460,7 @@ export default function AdminDashboard({
 
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-[#6DA77D]" />
-          <span className="text-[10px] font-semibold text-[#53745D]">
+          <span className="text-xs font-semibold text-[#53745D]">
             Session active
           </span>
 
@@ -469,7 +469,7 @@ export default function AdminDashboard({
           <select
             value={period}
             onChange={(event) => setPeriod(event.target.value)}
-            className="max-w-[155px] cursor-pointer bg-transparent py-1 text-[11px] font-semibold text-[#465A51] outline-none"
+            className="max-w-[155px] cursor-pointer bg-transparent py-1 text-xs font-semibold text-[#465A51] outline-none"
             aria-label="Analytics period"
           >
             <option>This academic year</option>
@@ -531,7 +531,7 @@ export default function AdminDashboard({
               <h3 className="text-sm font-bold text-[#253D38]">
                 Student enrollment
               </h3>
-              <p className="mt-1 text-[11px] text-[#89938E]">
+              <p className="mt-1 text-xs text-[#89938E]">
                 Enrollment overview across the academic year
               </p>
             </div>
@@ -551,12 +551,12 @@ export default function AdminDashboard({
               <h4 className="text-[26px] font-bold tracking-tight text-[#203B36]">
                 382
               </h4>
-              <p className="mt-1 text-[10px] text-[#87938C]">
+              <p className="mt-1 text-xs text-[#87938C]">
                 Total enrolled students
               </p>
             </div>
 
-            <span className="mb-1 inline-flex items-center gap-1 text-[10px] font-bold text-[#348257]">
+            <span className="mb-1 inline-flex items-center gap-1 text-xs font-bold text-[#348257]">
               <TrendingUp size={13} />
               Growing enrollment
             </span>
@@ -573,12 +573,12 @@ export default function AdminDashboard({
               <h3 className="text-sm font-bold text-[#253D38]">
                 Weekly attendance
               </h3>
-              <p className="mt-1 text-[11px] text-[#89938E]">
+              <p className="mt-1 text-xs text-[#89938E]">
                 Student attendance this week
               </p>
             </div>
 
-            <span className="rounded-lg bg-[#E7F2EC] px-2.5 py-1.5 text-[10px] font-bold text-[#39734F]">
+            <span className="rounded-lg bg-[#E7F2EC] px-2.5 py-1.5 text-xs font-bold text-[#39734F]">
               93.2% avg.
             </span>
           </div>
@@ -586,11 +586,11 @@ export default function AdminDashboard({
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-[#0D5C63]" />
-              <span className="text-[10px] text-[#78857E]">Present</span>
+              <span className="text-xs text-[#78857E]">Present</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-[#C9A84C]" />
-              <span className="text-[10px] text-[#78857E]">Absent</span>
+              <span className="text-xs text-[#78857E]">Absent</span>
             </div>
           </div>
 
@@ -600,7 +600,7 @@ export default function AdminDashboard({
 
           <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#F6F8F5] p-3">
             <CheckCircle2 size={17} className="shrink-0 text-[#43845A]" />
-            <p className="text-[10px] leading-5 text-[#64746A]">
+            <p className="text-xs leading-5 text-[#64746A]">
               Attendance data will be connected to daily teacher submissions.
             </p>
           </div>
@@ -615,7 +615,7 @@ export default function AdminDashboard({
               <h3 className="text-sm font-bold text-[#253D38]">
                 Students by class
               </h3>
-              <p className="mt-1 text-[11px] text-[#89938E]">
+              <p className="mt-1 text-xs text-[#89938E]">
                 Enrollment distribution across classes
               </p>
             </div>
@@ -623,7 +623,7 @@ export default function AdminDashboard({
             <button
               type="button"
               onClick={() => comingSoon("The classes page")}
-              className="text-[11px] font-bold text-[#0D5C63] hover:underline"
+              className="text-xs font-bold text-[#0D5C63] hover:underline"
             >
               View classes
             </button>
@@ -636,10 +636,10 @@ export default function AdminDashboard({
               return (
                 <div key={item.name}>
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-[11px] font-medium text-[#64716B]">
+                    <span className="text-xs font-medium text-[#64716B]">
                       {item.name}
                     </span>
-                    <span className="text-[11px] font-bold text-[#334A42]">
+                    <span className="text-xs font-bold text-[#334A42]">
                       {item.students}{" "}
                       <span className="font-normal text-[#9AA39D]">students</span>
                     </span>
@@ -669,12 +669,12 @@ export default function AdminDashboard({
               <h3 className="text-sm font-bold text-[#253D38]">
                 Pending actions
               </h3>
-              <p className="mt-1 text-[11px] text-[#89938E]">
+              <p className="mt-1 text-xs text-[#89938E]">
                 Items that need your attention
               </p>
             </div>
 
-            <span className="rounded-lg bg-[#FFF1D7] px-2.5 py-1.5 text-[10px] font-bold text-[#936818]">
+            <span className="rounded-lg bg-[#FFF1D7] px-2.5 py-1.5 text-xs font-bold text-[#936818]">
               6 pending
             </span>
           </div>
@@ -687,7 +687,7 @@ export default function AdminDashboard({
             <button
               type="button"
               onClick={() => comingSoon("The task centre")}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#E1E8E0] py-3 text-[11px] font-bold text-[#0D5C63] transition hover:bg-[#F5F8F4]"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#E1E8E0] py-3 text-xs font-bold text-[#0D5C63] transition hover:bg-[#F5F8F4]"
             >
               View all tasks
               <ChevronRight size={14} />
@@ -703,7 +703,7 @@ export default function AdminDashboard({
             <h3 className="text-sm font-bold text-[#253D38]">
               Recent fee payments
             </h3>
-            <p className="mt-1 text-[11px] text-[#89938E]">
+            <p className="mt-1 text-xs text-[#89938E]">
               Overview of recently submitted payment records
             </p>
           </div>
@@ -711,7 +711,7 @@ export default function AdminDashboard({
           <button
             type="button"
             onClick={() => comingSoon("The payments page")}
-            className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0D5C63] hover:underline"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#0D5C63] hover:underline"
           >
             View all payments
             <ArrowUpRight size={13} />
@@ -726,7 +726,7 @@ export default function AdminDashboard({
                   (heading) => (
                     <th
                       key={heading}
-                      className="px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[#8B9690]"
+                      className="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-[#8B9690]"
                     >
                       {heading}
                     </th>
@@ -744,7 +744,7 @@ export default function AdminDashboard({
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold"
                         style={{
                           backgroundColor: payment.color,
                           color: payment.textColor,
@@ -756,14 +756,14 @@ export default function AdminDashboard({
                         <p className="text-xs font-semibold text-[#344841]">
                           {payment.name}
                         </p>
-                        <p className="mt-1 text-[10px] text-[#929B95]">
+                        <p className="mt-1 text-xs text-[#929B95]">
                           Fee payment
                         </p>
                       </div>
                     </div>
                   </td>
 
-                  <td className="px-6 py-4 text-[11px] text-[#75827A]">
+                  <td className="px-6 py-4 text-xs text-[#75827A]">
                     {payment.reference}
                   </td>
 
@@ -771,13 +771,13 @@ export default function AdminDashboard({
                     {formatCurrency(payment.amount)}
                   </td>
 
-                  <td className="px-6 py-4 text-[11px] text-[#75827A]">
+                  <td className="px-6 py-4 text-xs text-[#75827A]">
                     {payment.date}
                   </td>
 
                   <td className="px-6 py-4">
                     <span
-                      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[10px] font-semibold"
+                      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold"
                       style={{
                         backgroundColor: payment.color,
                         color: payment.textColor,
@@ -809,13 +809,13 @@ export default function AdminDashboard({
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#EDF0EB] px-5 py-4 sm:px-6">
-          <p className="text-[10px] text-[#89938E]">
+          <p className="text-xs text-[#89938E]">
             Showing 3 sample payment records
           </p>
           <button
             type="button"
             onClick={() => comingSoon("Payment history")}
-            className="text-[10px] font-bold text-[#0D5C63] hover:underline"
+            className="text-xs font-bold text-[#0D5C63] hover:underline"
           >
             View payment history
           </button>
@@ -824,10 +824,10 @@ export default function AdminDashboard({
 
       {/* Footer */}
       <footer className="mt-8 flex flex-col items-center justify-between gap-2 pb-5 text-center sm:flex-row sm:text-left">
-        <p className="text-[10px] text-[#929B95]">
+        <p className="text-xs text-[#929B95]">
           © 2026 Grace & Favour Model School
         </p>
-        <p className="flex items-center gap-1.5 text-[10px] text-[#929B95]">
+        <p className="flex items-center gap-1.5 text-xs text-[#929B95]">
           <ShieldCheck size={13} className="text-[#0D5C63]" />
           School administration workspace
         </p>

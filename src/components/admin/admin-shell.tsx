@@ -45,7 +45,12 @@ const navigation: NavigationItem[] = [
   { label: "Teachers & Staff", icon: Users, href: "/admin/staff" },
   { label: "Classes", icon: BookOpen, href: "/admin/classes" },
   { label: "Subjects", icon: Library, href: "/admin/subjects" },
-  { label: "Attendance", icon: ClipboardCheck, section: "Daily Operations" },
+  {
+    label: "Attendance",
+    icon: ClipboardCheck,
+    href: "/admin/attendance",
+    section: "Daily Operations",
+  },
   { label: "Results & Reports", icon: FileCheck2 },
   { label: "Fees & Payments", icon: Wallet, section: "Finance" },
   { label: "Timetable", icon: CalendarDays, section: "Administration" },
@@ -111,7 +116,7 @@ export function AdminShell({
             </div>
             <div>
               <h1 className="text-[13px] font-bold leading-5">Grace & Favour</h1>
-              <p className="text-[10px] text-white/65">School Management</p>
+              <p className="text-xs text-white/65">School Management</p>
             </div>
           </div>
 
@@ -132,7 +137,7 @@ export function AdminShell({
             </div>
             <div className="min-w-0">
               <p className="truncate text-xs font-semibold">Administrator</p>
-              <p className="mt-0.5 text-[10px] text-white/55">Super Admin access</p>
+              <p className="mt-0.5 text-xs text-white/55">Super Admin access</p>
             </div>
             <ChevronDown size={15} className="ml-auto text-white/50" />
           </div>
@@ -146,7 +151,7 @@ export function AdminShell({
             return (
               <div key={item.label}>
                 {item.section && (
-                  <p className="mb-2 mt-6 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">
+                  <p className="mb-2 mt-6 px-3 text-xs font-bold uppercase tracking-[0.16em] text-white/45">
                     {item.section}
                   </p>
                 )}
@@ -156,7 +161,7 @@ export function AdminShell({
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
                     aria-current={active ? "page" : undefined}
-                    className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-[12px] font-medium transition ${
+                    className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium transition ${
                       active
                         ? "bg-white text-[#0D5C63] shadow-lg shadow-black/5"
                         : "text-white/75 hover:bg-white/10 hover:text-white"
@@ -169,11 +174,11 @@ export function AdminShell({
                 ) : (
                   <div
                     aria-disabled="true"
-                    className="flex w-full cursor-not-allowed items-center gap-3 rounded-xl px-3 py-3 text-[12px] font-medium text-white/35"
+                    className="flex w-full cursor-not-allowed items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-white/35"
                   >
                     <Icon size={17} strokeWidth={1.8} />
                     <span className="flex-1">{item.label}</span>
-                    <span className="rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white/50">
+                    <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white/50">
                       Soon
                     </span>
                   </div>
@@ -187,14 +192,14 @@ export function AdminShell({
           <div className="rounded-xl bg-white/[0.07] p-3">
             <div className="mb-2 flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-[#A8D832]" />
-              <span className="text-[10px] font-semibold text-white/80">
+              <span className="text-xs font-semibold text-white/80">
                 Academic session
               </span>
             </div>
             <p className="text-xs font-bold">
               {term ? term.sessionName.replace("/", " / ") : "Not set"}
             </p>
-            <p className="mt-1 text-[10px] text-white/55">
+            <p className="mt-1 text-xs text-white/55">
               {term ? term.termName : "Set a current term"}
             </p>
           </div>
@@ -224,7 +229,7 @@ export function AdminShell({
             </button>
 
             <div className="min-w-0">
-              <p className="hidden text-[10px] font-medium text-[#89938E] sm:block">
+              <p className="hidden text-xs font-medium text-[#89938E] sm:block">
                 Grace & Favour Model School
               </p>
               <h2 className="truncate text-base font-bold text-[#203432] sm:mt-1 sm:text-lg">
@@ -241,7 +246,7 @@ export function AdminShell({
               <p className="max-w-[200px] truncate text-xs font-bold text-[#293D39]">
                 {email || "Super Admin"}
               </p>
-              <p className="mt-0.5 text-[10px] text-[#89938E]">Super Admin</p>
+              <p className="mt-0.5 text-xs text-[#89938E]">Super Admin</p>
             </div>
           </div>
         </header>

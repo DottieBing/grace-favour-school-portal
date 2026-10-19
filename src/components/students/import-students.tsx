@@ -240,14 +240,14 @@ export function ImportStudents({ classNames }: { classNames: string[] }) {
           <div className="flex flex-wrap gap-3">
             <a
               href="/api/admin/students/import/template?format=xlsx"
-              className="inline-flex h-9 items-center gap-2 rounded-md border border-slate-200 px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"
+              className="inline-flex h-8 items-center gap-2 rounded-md border border-slate-200 px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"
             >
               <Download className="size-4" />
               Excel template
             </a>
             <a
               href="/api/admin/students/import/template?format=csv"
-              className="inline-flex h-9 items-center gap-2 rounded-md border border-slate-200 px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"
+              className="inline-flex h-8 items-center gap-2 rounded-md border border-slate-200 px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"
             >
               <Download className="size-4" />
               CSV template
@@ -470,7 +470,7 @@ export function ImportStudents({ classNames }: { classNames: string[] }) {
         </Button>
         <Link
           href="/admin/students"
-          className="inline-flex h-9 items-center rounded-md border border-slate-200 px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"
+          className="inline-flex h-8 items-center rounded-md border border-slate-200 px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"
         >
           View students
         </Link>

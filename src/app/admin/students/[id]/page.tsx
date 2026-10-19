@@ -15,6 +15,7 @@ import {
   type StudentStatus,
 } from "@/components/students/student-profile-actions";
 import { StudentTabs } from "@/components/students/student-tabs";
+import { StudentAttendanceSection } from "@/components/students/student-attendance-section";
 
 type GuardianRaw = {
   is_primary: boolean;
@@ -248,10 +249,11 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
       id: "attendance",
       label: "Attendance",
       content: (
-        <EmptyState
-          title="No attendance recorded yet"
-          text="The attendance calendar, rate by term and absences appear here once teachers mark attendance."
-        />
+        <Suspense
+          fallback={<div className="h-40 animate-pulse rounded-xl bg-slate-100" />}
+        >
+          <StudentAttendanceSection studentId={student.id as string} />
+        </Suspense>
       ),
     },
     {

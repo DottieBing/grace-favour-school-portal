@@ -35,9 +35,11 @@ export async function GET() {
   // Pages and API routes still do their own checks. This only picks the landing page.
   const path = names.includes("super_admin")
     ? "/admin"
-    : names.length > 0
-      ? "/portal"
-      : "/unauthorized";
+    : names.includes("teacher")
+      ? "/teacher"
+      : names.length > 0
+        ? "/portal"
+        : "/unauthorized";
 
   return NextResponse.json(
     { path },

@@ -27,7 +27,7 @@ export type ClassData = {
 type FormValues = { levelNumber: string; section: string; capacity: string };
 
 const selectClass =
-  "h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500";
+  "h-8 w-full rounded-md border border-input bg-background px-2.5 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25";
 
 export function ClassSheet({ cls }: { cls?: ClassData }) {
   const router = useRouter();

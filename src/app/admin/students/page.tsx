@@ -87,14 +87,14 @@ async function StudentsContent() {
         <div className="flex flex-wrap gap-3">
           <Link
             href="/admin/students/import"
-            className="inline-flex h-9 items-center gap-2 rounded-md border border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"
+            className="inline-flex h-8 items-center gap-2 rounded-md border border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"
           >
             <Upload className="size-4" />
             Import students
           </Link>
           <Link
             href="/admin/students/new"
-            className="inline-flex h-9 items-center gap-2 rounded-md bg-[#0D5C63] px-4 text-sm font-medium text-white hover:bg-[#09494F]"
+            className="inline-flex h-8 items-center gap-2 rounded-md bg-[#0D5C63] px-4 text-sm font-medium text-white hover:bg-[#09494F]"
           >
             <Plus className="size-4" />
             Add student

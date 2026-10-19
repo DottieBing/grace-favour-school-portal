@@ -19,7 +19,7 @@ export type OtherClass = {
 };
 
 const selectClass =
-  "h-9 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500";
+  "h-8 rounded-md border border-input bg-background px-2.5 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25";
 
 export function ClassSubjectsForm({
   classId,

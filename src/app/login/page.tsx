@@ -176,7 +176,7 @@ export default function LoginPage() {
                   value={identifier}
                   onChange={(event) => setIdentifier(event.target.value)}
                   placeholder="you@school.com or GFMS2627001"
-                  className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-sm outline-none transition focus:border-[#0D5C63] focus:ring-4 focus:ring-[#0D5C63]/10"
+                  className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-sm outline-none transition focus:border-[#0D5C63] focus:ring-4 focus:ring-[#0D5C63]/10"
                 />
               </div>
             </div>
@@ -205,7 +205,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="Enter your password"
-                  className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-12 text-sm outline-none transition focus:border-[#0D5C63] focus:ring-4 focus:ring-[#0D5C63]/10"
+                  className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-12 text-sm outline-none transition focus:border-[#0D5C63] focus:ring-4 focus:ring-[#0D5C63]/10"
                 />
 
                 <button
@@ -231,7 +231,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#0D5C63] px-4 text-sm font-semibold text-white transition hover:bg-[#09474D] disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0D5C63] px-4 text-sm font-semibold text-white transition hover:bg-[#09474D] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (
                 <>
