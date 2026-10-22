@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { accessErrorResponse, getAccess } from "@/lib/auth/access";
+import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { findExistingKeys } from "@/lib/students/import-existing";
 import { readSheet } from "@/lib/students/import-parse";
@@ -14,7 +14,7 @@ import {
 const MAX_BYTES = 5 * 1024 * 1024;
 
 export async function POST(request: Request) {
-  const access = await getAccess("super_admin");
+  const access = await getAdminAccess("students", "manage");
 
   if (!access.ok) {
     return accessErrorResponse(access);

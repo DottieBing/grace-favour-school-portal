@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { StudentPhoto } from "@/components/students/student-photo";
 import {
@@ -16,6 +16,8 @@ import {
 } from "@/components/students/student-profile-actions";
 import { StudentTabs } from "@/components/students/student-tabs";
 import { StudentAttendanceSection } from "@/components/students/student-attendance-section";
+import { StudentAcademicsSection } from "@/components/students/student-academics-section";
+import { StudentOverviewCards } from "@/components/students/student-overview-cards";
 
 type GuardianRaw = {
   is_primary: boolean;
@@ -72,7 +74,7 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
 }
 
 async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("students");
   const { id } = await params;
 
   if (!z.uuid().safeParse(id).success) {
@@ -184,24 +186,11 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
       label: "Overview",
       content: (
         <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {["Attendance rate", "Current average", "Class position", "Fee balance"].map(
-              (label) => (
-                <div
-                  key={label}
-                  className="rounded-xl border border-slate-200 bg-white p-5"
-                >
-                  <div className="text-xs text-slate-500">{label}</div>
-                  <div className="mt-2 text-2xl font-semibold text-slate-300">
-                    -
-                  </div>
-                  <div className="mt-1 text-xs text-slate-400">
-                    No data yet
-                  </div>
-                </div>
-              ),
-            )}
-          </div>
+          <Suspense
+            fallback={<div className="h-28 animate-pulse rounded-xl bg-slate-100" />}
+          >
+            <StudentOverviewCards studentId={student.id as string} />
+          </Suspense>
 
           <Card title="Details">
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -239,10 +228,11 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
       id: "academics",
       label: "Academics",
       content: (
-        <EmptyState
-          title="No results yet"
-          text="Scores, term trends, subject strengths and report cards appear here once results are entered."
-        />
+        <Suspense
+          fallback={<div className="h-40 animate-pulse rounded-xl bg-slate-100" />}
+        >
+          <StudentAcademicsSection studentId={student.id as string} />
+        </Suspense>
       ),
     },
     {

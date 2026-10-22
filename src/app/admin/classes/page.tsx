@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { levelLabel } from "@/lib/academic/levels";
 import { ConfirmStatusButton } from "@/components/admin/confirm-status-button";
@@ -14,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { ClickableRow } from "@/components/admin/clickable-row";
 
 type ClassRow = {
   id: string;
@@ -25,7 +26,7 @@ type ClassRow = {
 };
 
 async function ClassesContent() {
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("classes");
 
   const admin = createAdminClient();
 
@@ -105,8 +106,9 @@ async function ClassesContent() {
                   const students = counts.get(item.id) ?? 0;
 
                   return (
-                    <TableRow
+                    <ClickableRow
                       key={item.id}
+                      href={`/admin/classes/${item.id}`}
                       className={item.is_active ? "" : "opacity-60"}
                     >
                       <TableCell className="font-medium text-slate-900">
@@ -152,7 +154,7 @@ async function ClassesContent() {
                           />
                         </div>
                       </TableCell>
-                    </TableRow>
+                    </ClickableRow>
                   );
                 })
               )}

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentSession } from "@/lib/academic/current-session";
 import { levelLabel } from "@/lib/academic/levels";
@@ -21,7 +21,7 @@ import {
 } from "@/components/classes/class-teachers";
 
 async function ClassContent({ params }: { params: Promise<{ id: string }> }) {
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("classes");
   const { id } = await params;
 
   if (!z.uuid().safeParse(id).success) {

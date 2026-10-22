@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { accessErrorResponse, getAccess } from "@/lib/auth/access";
+import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkArmRules } from "@/lib/academic/classes";
 import { buildClassName } from "@/lib/academic/levels";
@@ -22,7 +22,7 @@ const schema = z.object({
 });
 
 export async function POST(request: Request) {
-  const access = await getAccess("super_admin");
+  const access = await getAdminAccess("classes", "manage");
 
   if (!access.ok) {
     return accessErrorResponse(access);

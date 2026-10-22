@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { accessErrorResponse, getAccess } from "@/lib/auth/access";
+import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const optionalText = (max: number) =>
@@ -38,7 +38,7 @@ export async function PATCH(
   request: Request,
   context: { params: Promise<{ id: string }> },
 ) {
-  const access = await getAccess("super_admin");
+  const access = await getAdminAccess("students", "manage");
 
   if (!access.ok) {
     return accessErrorResponse(access);

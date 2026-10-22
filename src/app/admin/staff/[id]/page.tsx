@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { EditStaffSheet } from "@/components/staff/edit-staff-sheet";
 import {
@@ -53,7 +53,7 @@ function Detail({ label, value }: { label: string; value: string | null }) {
 }
 
 async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
-  const { user } = await requirePageAccess("super_admin");
+  const { user } = await requireAreaAccess("staff");
   const { id } = await params;
 
   if (!z.uuid().safeParse(id).success) {

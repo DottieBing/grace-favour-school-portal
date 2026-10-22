@@ -2,12 +2,12 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ImportStudents } from "@/components/students/import-students";
 
 async function ImportContent() {
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("students", "manage");
 
   const admin = createAdminClient();
 

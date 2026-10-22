@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BookOpen,
-  Building2,
   CalendarDays,
   CalendarRange,
   ChevronDown,
@@ -14,26 +13,33 @@ import {
   FileCheck2,
   GraduationCap,
   LayoutDashboard,
+  Library,
   LogOut,
   Menu,
+  Scale,
   Settings,
   ShieldCheck,
+  UserCog,
   UserRound,
   Users,
   Wallet,
   X,
-  Library,
   type LucideIcon,
 } from "lucide-react";
+
+import { SchoolLogo } from "@/components/brand/school-logo";
+import { allows, type Area, type Permissions } from "@/lib/auth/permissions";
 
 type NavigationItem = {
   label: string;
   icon: LucideIcon;
   href?: string;
   section?: string;
+  area?: Area;
+  ownerOnly?: boolean;
 };
 
-// Items without an href are modules we haven't built yet.
+// Items without an href are modules we haven't built yet (owner sees them as "Soon").
 const navigation: NavigationItem[] = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin", section: "Overview" },
   {
@@ -41,22 +47,43 @@ const navigation: NavigationItem[] = [
     icon: GraduationCap,
     href: "/admin/students",
     section: "School Management",
+    area: "students",
   },
-  { label: "Teachers & Staff", icon: Users, href: "/admin/staff" },
-  { label: "Classes", icon: BookOpen, href: "/admin/classes" },
-  { label: "Subjects", icon: Library, href: "/admin/subjects" },
+  { label: "Teachers & Staff", icon: Users, href: "/admin/staff", area: "staff" },
+  { label: "Classes", icon: BookOpen, href: "/admin/classes", area: "classes" },
+  { label: "Subjects", icon: Library, href: "/admin/subjects", area: "classes" },
   {
     label: "Attendance",
     icon: ClipboardCheck,
     href: "/admin/attendance",
     section: "Daily Operations",
+    area: "attendance",
   },
-  { label: "Results & Reports", icon: FileCheck2 },
-  { label: "Fees & Payments", icon: Wallet, section: "Finance" },
-  { label: "Timetable", icon: CalendarDays, section: "Administration" },
-  { label: "Academic Sessions", icon: CalendarRange, href: "/admin/sessions" },
-  { label: "Settings", icon: Settings },
+  {
+    label: "Results & Reports",
+    icon: FileCheck2,
+    href: "/admin/results",
+    area: "results",
+  },
+  { label: "Fees & Payments", icon: Wallet, section: "Finance", ownerOnly: true },
+  { label: "Timetable", icon: CalendarDays, section: "Administration", ownerOnly: true },
+  {
+    label: "Academic Sessions",
+    icon: CalendarRange,
+    href: "/admin/sessions",
+    area: "sessions",
+  },
+  { label: "Grading", icon: Scale, href: "/admin/grading", area: "grading" },
+  { label: "Users & Access", icon: UserCog, ownerOnly: true },
+  { label: "Settings", icon: Settings, ownerOnly: true },
 ];
+
+// Each item belongs to the heading above it.
+let currentGroup = "";
+const grouped = navigation.map((item) => {
+  if (item.section) currentGroup = item.section;
+  return { ...item, group: currentGroup };
+});
 
 function isActivePath(pathname: string, href: string) {
   return href === "/admin"
@@ -64,12 +91,29 @@ function isActivePath(pathname: string, href: string) {
     : pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function isVisible(
+  item: NavigationItem,
+  isOwner: boolean,
+  permissions: Permissions,
+) {
+  if (isOwner) return true;
+  if (item.ownerOnly || !item.href) return false;
+
+  return item.area ? allows(permissions, item.area, "view") : true;
+}
+
 export function AdminShell({
   email,
+  roleLabel,
+  isOwner,
+  permissions,
   term,
   children,
 }: {
   email: string;
+  roleLabel: string;
+  isOwner: boolean;
+  permissions: Permissions;
   term: { sessionName: string; termName: string } | null;
   children: ReactNode;
 }) {
@@ -78,8 +122,10 @@ export function AdminShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
 
+  const visible = grouped.filter((item) => isVisible(item, isOwner, permissions));
+
   const currentTitle =
-    navigation.find((item) => item.href && isActivePath(pathname, item.href))
+    visible.find((item) => item.href && isActivePath(pathname, item.href))
       ?.label ?? "Admin";
 
   async function signOut() {
@@ -105,14 +151,14 @@ export function AdminShell({
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[250px] flex-col bg-[#0D5C63] text-white transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 print:hidden flex w-[250px] flex-col bg-[#0D5C63] text-white transition-transform duration-300 lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex h-[84px] items-center justify-between border-b border-white/10 px-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#0D5C63]">
-              <Building2 size={22} />
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white p-1">
+              <SchoolLogo size={32} />
             </div>
             <div>
               <h1 className="text-[13px] font-bold leading-5">Grace & Favour</h1>
@@ -136,23 +182,26 @@ export function AdminShell({
               <ShieldCheck size={19} />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-xs font-semibold">Administrator</p>
-              <p className="mt-0.5 text-xs text-white/55">Super Admin access</p>
+              <p className="truncate text-xs font-semibold">{roleLabel}</p>
+              <p className="mt-0.5 text-xs text-white/55">
+                {isOwner ? "Full access" : "Limited access"}
+              </p>
             </div>
             <ChevronDown size={15} className="ml-auto text-white/50" />
           </div>
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 pb-5">
-          {navigation.map((item) => {
+          {visible.map((item, index) => {
             const Icon = item.icon;
             const active = item.href ? isActivePath(pathname, item.href) : false;
+            const showLabel = index === 0 || visible[index - 1].group !== item.group;
 
             return (
               <div key={item.label}>
-                {item.section && (
+                {showLabel && (
                   <p className="mb-2 mt-6 px-3 text-xs font-bold uppercase tracking-[0.16em] text-white/45">
-                    {item.section}
+                    {item.group}
                   </p>
                 )}
 
@@ -216,8 +265,8 @@ export function AdminShell({
         </div>
       </aside>
 
-      <div className="min-h-screen lg:pl-[250px]">
-        <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between gap-4 border-b border-[#E8ECE7] bg-white/95 px-4 backdrop-blur-md sm:px-7 xl:px-9">
+      <div className="min-h-screen lg:pl-[250px] print:pl-0">
+        <header className="sticky top-0 z-30 print:hidden flex h-[76px] items-center justify-between gap-4 border-b border-[#E8ECE7] bg-white/95 px-4 backdrop-blur-md sm:px-7 xl:px-9">
           <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
@@ -244,9 +293,9 @@ export function AdminShell({
             </div>
             <div className="hidden text-left sm:block">
               <p className="max-w-[200px] truncate text-xs font-bold text-[#293D39]">
-                {email || "Super Admin"}
+                {email || roleLabel}
               </p>
-              <p className="mt-0.5 text-xs text-[#89938E]">Super Admin</p>
+              <p className="mt-0.5 text-xs text-[#89938E]">{roleLabel}</p>
             </div>
           </div>
         </header>

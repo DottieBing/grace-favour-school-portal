@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CreateSessionSheet } from "@/components/sessions/create-session-sheet";
 import {
@@ -33,7 +33,7 @@ function formatDate(value: string) {
 }
 
 async function SessionsContent() {
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("sessions");
 
   const admin = createAdminClient();
 

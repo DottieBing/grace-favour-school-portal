@@ -13,6 +13,7 @@ import {
   ArrowRight,
   LoaderCircle,
 } from "lucide-react";
+import { SchoolLogo } from "@/components/brand/school-logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -81,8 +82,8 @@ export default function LoginPage() {
         <div className="absolute -bottom-40 -left-20 h-96 w-96 rounded-full bg-white/5" />
 
         <div className="relative z-10 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#0D5C63]">
-            <ShieldCheck size={27} />
+          <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white p-1">
+            <SchoolLogo size={40} />
           </div>
 
           <div>
@@ -126,8 +127,8 @@ export default function LoginPage() {
       <section className="flex flex-1 items-center justify-center px-5 py-12 sm:px-10">
         <div className="w-full max-w-md">
           <div className="mb-10 lg:hidden">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0D5C63] text-white">
-              <ShieldCheck size={26} />
+            <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-1">
+              <SchoolLogo size={40} />
             </div>
 
             <h1 className="mt-4 text-xl font-semibold text-slate-900">

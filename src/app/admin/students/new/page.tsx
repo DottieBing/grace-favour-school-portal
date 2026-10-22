@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentSession } from "@/lib/academic/current-session";
 import {
@@ -9,7 +9,7 @@ import {
 } from "@/components/students/register-student-form";
 
 async function NewStudentContent() {
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("students", "manage");
 
   const admin = createAdminClient();
 

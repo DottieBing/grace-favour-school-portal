@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ClickableRow } from "@/components/admin/clickable-row";
 
 export type StudentRow = {
   id: string;
@@ -125,7 +126,7 @@ export function StudentsTable({
             </TableRow>
           ) : (
             filtered.map((student) => (
-              <TableRow key={student.id}>
+              <ClickableRow key={student.id} href={`/admin/students/${student.id}`}>
                 <TableCell>
                   <Link
                     href={`/admin/students/${student.id}`}
@@ -150,7 +151,7 @@ export function StudentsTable({
                     {STATUS_LABELS[student.status]}
                   </span>
                 </TableCell>
-              </TableRow>
+              </ClickableRow>
             ))
           )}
         </TableBody>

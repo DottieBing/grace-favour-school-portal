@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ConfirmStatusButton } from "@/components/admin/confirm-status-button";
 import { SubjectSheet } from "@/components/subjects/subject-sheet";
@@ -22,7 +22,7 @@ type SubjectRow = {
 };
 
 async function SubjectsContent() {
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("classes");
 
   const admin = createAdminClient();
 

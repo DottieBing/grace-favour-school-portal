@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { accessErrorResponse, getAccess } from "@/lib/auth/access";
+import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -43,7 +43,7 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ id: string }> },
 ) {
-  const access = await getAccess("super_admin");
+  const access = await getAdminAccess("students", "manage");
 
   if (!access.ok) {
     return accessErrorResponse(access);

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   formatLongDate,
@@ -51,7 +51,7 @@ async function ClassRegisterContent({
   params: Promise<{ classId: string }>;
   searchParams: Promise<{ date?: string }>;
 }) {
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("attendance");
 
   const { classId } = await params;
   const { date: requested } = await searchParams;

@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { ClickableRow } from "@/components/admin/clickable-row";
 
 export type StaffRow = {
   id: string;
@@ -129,7 +130,7 @@ export function StaffTable({ staff }: { staff: StaffRow[] }) {
             </TableRow>
           ) : (
             filtered.map((member) => (
-              <TableRow key={member.id}>
+              <ClickableRow key={member.id} href={`/admin/staff/${member.id}`}>
                 <TableCell>
                   <Link
                     href={`/admin/staff/${member.id}`}
@@ -170,7 +171,7 @@ export function StaffTable({ staff }: { staff: StaffRow[] }) {
                     {member.is_active ? "Active" : "Inactive"}
                   </span>
                 </TableCell>
-              </TableRow>
+              </ClickableRow>
             ))
           )}
         </TableBody>

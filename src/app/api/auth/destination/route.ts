@@ -33,7 +33,7 @@ export async function GET() {
   const names = (roles ?? []).map((item) => item.role as string);
 
   // Pages and API routes still do their own checks. This only picks the landing page.
-  const path = names.includes("super_admin")
+  const path = names.includes("super_admin") || names.includes("admin_user")
     ? "/admin"
     : names.includes("teacher")
       ? "/teacher"

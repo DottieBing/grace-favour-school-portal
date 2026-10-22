@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { accessErrorResponse, getAccess } from "@/lib/auth/access";
+import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { generateStudentPassword } from "@/lib/students/password";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -9,7 +9,7 @@ export async function POST(
   _request: Request,
   context: { params: Promise<{ id: string }> },
 ) {
-  const access = await getAccess("super_admin");
+  const access = await getAdminAccess("students", "manage");
 
   if (!access.ok) {
     return accessErrorResponse(access);

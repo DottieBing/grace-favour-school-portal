@@ -3,7 +3,8 @@
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, ShieldCheck } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { SchoolLogo } from "../brand/school-logo";
 
 export function TeacherShell({
   name,
@@ -30,14 +31,15 @@ export function TeacherShell({
   }
 
   const onAttendance = pathname.startsWith("/teacher/attendance");
+    const onResults = pathname.startsWith("/teacher/results");  
 
   return (
     <div className="min-h-screen bg-[#F6F8F5] text-[#203432]">
       <header className="sticky top-0 z-30 border-b border-[#E8ECE7] bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0D5C63] text-white">
-              <ShieldCheck size={21} />
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-[#E2E8E1] bg-white p-1">
+              <SchoolLogo size={32} />
             </div>
             <div>
               <p className="text-sm font-bold leading-4">Grace & Favour</p>
@@ -77,15 +79,17 @@ export function TeacherShell({
           >
             Attendance
           </Link>
-          <span
-            aria-disabled="true"
-            className="flex cursor-not-allowed items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-[#A2AAA5]"
+          <Link
+            href="/teacher/results"
+            aria-current={onResults ? "page" : undefined}
+            className={`rounded-md px-3 py-1.5 text-sm font-medium ${
+              onResults
+                ? "bg-[#0D5C63] text-white"
+                : "text-[#53645D] hover:bg-[#F1F5F2]"
+            }`}
           >
             Results
-            <span className="rounded-full bg-[#EEF1EC] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
-              Soon
-            </span>
-          </span>
+          </Link>
         </nav>
       </header>
 

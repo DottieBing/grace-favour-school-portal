@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { accessErrorResponse, getAccess } from "@/lib/auth/access";
+import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(
   _request: Request,
   context: { params: Promise<{ id: string }> },
 ) {
-  const access = await getAccess("super_admin");
+  const access = await getAdminAccess("attendance", "manage");
 
   if (!access.ok) {
     return accessErrorResponse(access);

@@ -1,12 +1,12 @@
 import { Suspense } from "react";
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CreateStaffSheet } from "@/components/staff/create-staff-sheet";
 import { StaffTable, type StaffRow } from "@/components/staff/staff-table";
 
 async function StaffContent() {
     // 1. Only an active, signed-in Super Admin may view this page.
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("staff");
 
   // 2. Permission verified, so read staff with the server-only admin client.
   const admin = createAdminClient();

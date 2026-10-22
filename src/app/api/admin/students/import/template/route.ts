@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import ExcelJS from "exceljs";
 
-import { accessErrorResponse, getAccess } from "@/lib/auth/access";
+import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { TEMPLATE_HEADERS } from "@/lib/students/import-schema";
 
 export async function GET(request: Request) {
-  const access = await getAccess("super_admin");
+  const access = await getAdminAccess("students", "manage");
 
   if (!access.ok) {
     return accessErrorResponse(access);

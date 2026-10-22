@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Plus, Upload } from "lucide-react";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   StudentsTable,
@@ -31,7 +31,7 @@ function first<T>(value: T | T[] | null): T | null {
 }
 
 async function StudentsContent() {
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("students");
 
   const admin = createAdminClient();
 

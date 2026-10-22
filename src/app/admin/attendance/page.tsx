@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { z } from "zod";
 
-import { requirePageAccess } from "@/lib/auth/access";
+import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   formatLongDate,
@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ClickableRow } from "@/components/admin/clickable-row";
 
 const linkClass =
   "inline-flex h-8 items-center rounded-md border border-slate-200 px-3 text-sm font-medium text-slate-900 hover:bg-slate-50";
@@ -29,7 +30,7 @@ async function OverviewContent({
 }: {
   searchParams: Promise<{ date?: string }>;
 }) {
-  await requirePageAccess("super_admin");
+  await requireAreaAccess("attendance");
 
   const { date: requested } = await searchParams;
   const today = todayInSchool();
@@ -205,7 +206,7 @@ async function OverviewContent({
                 const href = `/admin/attendance/${classId}?date=${date}`;
 
                 return (
-                  <TableRow key={classId}>
+                  <ClickableRow key={classId} href={href}>
                     <TableCell className="font-medium text-slate-900">
                       {item.name as string}
                     </TableCell>
@@ -245,7 +246,7 @@ async function OverviewContent({
                         </Link>
                       </div>
                     </TableCell>
-                  </TableRow>
+                  </ClickableRow>
                 );
               })
             )}
