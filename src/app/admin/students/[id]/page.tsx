@@ -74,7 +74,7 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
 }
 
 async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
-  await requireAreaAccess("students");
+  const { canManage } = await requireAreaAccess("students");
   const { id } = await params;
 
   if (!z.uuid().safeParse(id).success) {
@@ -320,6 +320,7 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
               <Detail label="Status" value={STATUS_LABELS[status]} />
             </div>
 
+            {canManage ? (
             <div className="mt-5">
               <ResetStudentPasswordButton
                 studentId={student.id as string}
@@ -333,8 +334,10 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
                 </p>
               ) : null}
             </div>
+            ) : null}
           </Card>
 
+                    {canManage ? (
           <section className="rounded-xl border border-red-200 bg-white p-6">
             <h2 className="text-sm font-semibold text-red-700">
               Class and status
@@ -358,6 +361,7 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
               />
             </div>
           </section>
+          ) : null}
         </div>
       ),
     },
@@ -379,6 +383,7 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
             studentId={student.id as string}
             name={name}
             photoUrl={photoUrl}
+            canEdit={canManage}
           />
 
           <div className="min-w-0 flex-1">

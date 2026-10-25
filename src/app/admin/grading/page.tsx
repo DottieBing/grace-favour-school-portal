@@ -22,7 +22,7 @@ type ComponentRow = {
 };
 
 async function GradingContent() {
-  await requireAreaAccess("grading");
+  const { canManage } = await requireAreaAccess("grading");
 
   const admin = createAdminClient();
 
@@ -86,7 +86,7 @@ async function GradingContent() {
               marks, and the percentage is worked out from that total.
             </p>
           </div>
-          <ComponentSheet />
+          {canManage ? <ComponentSheet /> : null}
         </div>
 
         <div className="rounded-lg border border-slate-200">
@@ -132,6 +132,7 @@ async function GradingContent() {
                       </span>
                     </TableCell>
                     <TableCell>
+                      {canManage ? (
                       <div className="flex justify-end gap-2">
                         <ComponentSheet
                           component={{
@@ -148,6 +149,7 @@ async function GradingContent() {
                           reactivateMessage="It will count toward new results again."
                         />
                       </div>
+                      ) : null}
                     </TableCell>
                   </TableRow>
                 ))
@@ -166,7 +168,9 @@ async function GradingContent() {
           </p>
         </div>
 
-        <BandsEditor initial={bands} />
+        <fieldset disabled={!canManage} className="m-0 min-w-0 border-0 p-0">
+          <BandsEditor initial={bands} />
+        </fieldset>
       </section>
     </div>
   );

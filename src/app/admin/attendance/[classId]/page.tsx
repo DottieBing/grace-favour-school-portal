@@ -51,7 +51,7 @@ async function ClassRegisterContent({
   params: Promise<{ classId: string }>;
   searchParams: Promise<{ date?: string }>;
 }) {
-  await requireAreaAccess("attendance");
+  const { canManage } = await requireAreaAccess("attendance");
 
   const { classId } = await params;
   const { date: requested } = await searchParams;
@@ -150,14 +150,18 @@ async function ClassRegisterContent({
           </span>
         </div>
 
-        {status === "submitted" ? (
+        {canManage && status === "submitted" ? (
           <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
             This register is submitted. Saving changes will correct it, and the
             correction is recorded.
           </p>
         ) : null}
 
-        {entry.students.length === 0 ? (
+                {!canManage && !entry.register ? (
+          <p className="text-sm text-slate-500">
+            No register has been submitted for this day.
+          </p>
+        ) : entry.students.length === 0 ? (
           <p className="text-sm text-slate-500">
             There are no active students in this class.
           </p>
@@ -170,6 +174,7 @@ async function ClassRegisterContent({
             initial={entry.marks}
             endpoint="/api/admin/attendance"
             sendDate
+            readOnly={!canManage}
             submitLabel="Save register"
           />
         )}

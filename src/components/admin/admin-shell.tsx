@@ -74,7 +74,7 @@ const navigation: NavigationItem[] = [
     area: "sessions",
   },
   { label: "Grading", icon: Scale, href: "/admin/grading", area: "grading" },
-  { label: "Users & Access", icon: UserCog, ownerOnly: true },
+  { label: "Users & Access", icon: UserCog, href: "/admin/users", ownerOnly: true },
   { label: "Settings", icon: Settings, ownerOnly: true },
 ];
 

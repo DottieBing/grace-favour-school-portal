@@ -11,7 +11,7 @@ import {
 import type { SheetState } from "@/lib/results/types";
 
 async function ResultsContent() {
-  await requireAreaAccess("results");
+  const { canManage } = await requireAreaAccess("results");
 
   const [session, term] = await Promise.all([
     getCurrentSession(),
@@ -130,7 +130,7 @@ async function ResultsContent() {
         </p>
       </div>
 
-      <ResultsTable rows={rows} classes={classes} />
+      <ResultsTable rows={rows} classes={classes} canManage={canManage} />
     </div>
   );
 }

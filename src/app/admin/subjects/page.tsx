@@ -22,7 +22,7 @@ type SubjectRow = {
 };
 
 async function SubjectsContent() {
-  await requireAreaAccess("classes");
+  const { canManage } = await requireAreaAccess("classes");
 
   const admin = createAdminClient();
 
@@ -47,7 +47,7 @@ async function SubjectsContent() {
             offer. Its past records stay.
           </p>
         </div>
-        <SubjectSheet />
+        {canManage ? <SubjectSheet /> : null}
       </div>
 
       {error ? (
@@ -103,6 +103,7 @@ async function SubjectsContent() {
                       </span>
                     </TableCell>
                     <TableCell>
+                      {canManage ? (
                       <div className="flex justify-end gap-2">
                         <SubjectSheet
                           subject={{
@@ -120,6 +121,7 @@ async function SubjectsContent() {
                           reactivateMessage="It will be available again for classes and teacher assignments."
                         />
                       </div>
+                      ) : null}
                     </TableCell>
                   </TableRow>
                 ))

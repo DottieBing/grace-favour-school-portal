@@ -6,7 +6,7 @@ import { StaffTable, type StaffRow } from "@/components/staff/staff-table";
 
 async function StaffContent() {
     // 1. Only an active, signed-in Super Admin may view this page.
-  await requireAreaAccess("staff");
+  const { canManage } = await requireAreaAccess("staff")
 
   // 2. Permission verified, so read staff with the server-only admin client.
   const admin = createAdminClient();
@@ -33,7 +33,7 @@ async function StaffContent() {
             Manage teaching and non-teaching staff records.
           </p>
         </div>
-        <CreateStaffSheet />
+        {canManage ? <CreateStaffSheet /> : null}
       </div>
 
       {error ? (

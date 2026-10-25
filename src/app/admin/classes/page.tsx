@@ -26,7 +26,7 @@ type ClassRow = {
 };
 
 async function ClassesContent() {
-  await requireAreaAccess("classes");
+  const { canManage } = await requireAreaAccess("classes");
 
   const admin = createAdminClient();
 
@@ -72,7 +72,7 @@ async function ClassesContent() {
             than one class.
           </p>
         </div>
-        <ClassSheet />
+        {canManage ? <ClassSheet /> : null}
       </div>
 
       {failed ? (
@@ -136,6 +136,7 @@ async function ClassesContent() {
                         </span>
                       </TableCell>
                       <TableCell>
+                        {canManage ? (
                         <div className="flex justify-end gap-2">
                           <ClassSheet
                             cls={{
@@ -153,6 +154,7 @@ async function ClassesContent() {
                             reactivateMessage="The class will be available again."
                           />
                         </div>
+                        ) : null}
                       </TableCell>
                     </ClickableRow>
                   );

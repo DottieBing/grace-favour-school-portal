@@ -30,6 +30,8 @@ async function Router() {
           ? "/portal"
           : "/unauthorized",
   );
+
+  return null;
 }
 
 export default function HomePage() {

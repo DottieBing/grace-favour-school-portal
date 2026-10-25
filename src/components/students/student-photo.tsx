@@ -21,10 +21,12 @@ export function StudentPhoto({
   studentId,
   name,
   photoUrl,
+  canEdit = true,
 }: {
   studentId: string;
   name: string;
   photoUrl: string | null;
+  canEdit?: boolean;
 }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -89,17 +91,19 @@ export function StudentPhoto({
         onChange={onFileChange}
       />
 
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        disabled={uploading}
-        onClick={() => inputRef.current?.click()}
-        className="gap-2"
-      >
-        <Camera className="size-4" />
-        {uploading ? "Uploading..." : photoUrl ? "Change photo" : "Upload photo"}
-      </Button>
+      {canEdit ? (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={uploading}
+          onClick={() => inputRef.current?.click()}
+          className="gap-2"
+        >
+          <Camera className="size-4" />
+          {uploading ? "Uploading..." : photoUrl ? "Change photo" : "Upload photo"}
+        </Button>
+      ) : null}
 
       {error ? (
         <p className="max-w-[200px] text-center text-xs text-red-600">

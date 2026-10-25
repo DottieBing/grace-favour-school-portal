@@ -53,7 +53,7 @@ function Detail({ label, value }: { label: string; value: string | null }) {
 }
 
 async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
-  const { user } = await requireAreaAccess("staff");
+  const { user, canManage } = await requireAreaAccess("staff");
   const { id } = await params;
 
   if (!z.uuid().safeParse(id).success) {
@@ -131,7 +131,12 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
 
       <div className="rounded-xl border border-slate-200 bg-white p-6">
         <div className="flex flex-wrap items-start gap-6">
-          <StaffPhoto staffId={staff.id} name={name} photoUrl={photoUrl} />
+          <StaffPhoto
+  staffId={staff.id}
+  name={name}
+  photoUrl={photoUrl}
+  canEdit={canManage}
+/>
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -159,7 +164,7 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
             </p>
           </div>
 
-          <EditStaffSheet
+          {canManage ? <EditStaffSheet
             staff={{
               id: staff.id,
               hasLogin: Boolean(staff.user_id),
@@ -176,7 +181,7 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
               emergencyContactName: staff.emergency_contact_name ?? "",
               emergencyContactPhone: staff.emergency_contact_phone ?? "",
             }}
-          />
+          /> : null}
         </div>
       </div>
 
@@ -238,12 +243,14 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
             <p className="text-sm text-slate-600">
               {staff.email ?? "This teacher"} can sign in to the teacher portal.
             </p>
-            <ResetPasswordButton
-              staffId={staff.id}
-              name={name}
-              email={staff.email ?? ""}
-              disabled={Boolean(protectedReason)}
-            />
+            {canManage ? (
+              <ResetPasswordButton
+                staffId={staff.id}
+                name={name}
+                email={staff.email ?? ""}
+                disabled={Boolean(protectedReason)}
+              />
+            ) : null}
           </div>
         ) : (
           <p className="mt-3 text-sm text-slate-600">
@@ -252,6 +259,7 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
         )}
       </section>
 
+            {canManage ? (
       <section className="rounded-xl border border-red-200 bg-white p-6">
         <h2 className="text-sm font-semibold text-red-700">Danger zone</h2>
         <p className="mt-2 text-sm text-slate-600">
@@ -274,6 +282,7 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
           />
         </div>
       </section>
+      ) : null}
     </div>
   );
 }

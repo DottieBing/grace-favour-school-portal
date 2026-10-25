@@ -15,7 +15,7 @@ import { ScoreGrid } from "@/components/results/score-grid";
 import { StatusBadge } from "@/components/results/status-badge";
 
 async function SheetContent({ params }: { params: Promise<{ id: string }> }) {
-  await requireAreaAccess("results");
+  const { canManage } = await requireAreaAccess("results");
   const { id } = await params;
 
   if (!z.uuid().safeParse(id).success) {
@@ -97,7 +97,7 @@ async function SheetContent({ params }: { params: Promise<{ id: string }> }) {
           </p>
         </div>
 
-        {data.state === "submitted" ? (
+        {canManage && data.state === "submitted" ? (
           <div className="flex gap-2">
             <ReopenResultButton sheetId={id} label={title} />
             <PublishButton sheetIds={[id]} label="Publish results" />

@@ -35,9 +35,11 @@ const selectClass =
 export function ResultsTable({
   rows,
   classes,
+  canManage,
 }: {
   rows: ResultRow[];
   classes: { id: string; name: string }[];
+  canManage: boolean;
 }) {
   const [classId, setClassId] = useState("all");
   const [state, setState] = useState<"all" | SheetState>("all");
@@ -54,7 +56,7 @@ export function ResultsTable({
   );
 
   const selectable = filtered
-    .filter((row) => row.state === "submitted" && row.sheetId)
+    .filter((row) => canManage && row.state === "submitted" && row.sheetId)
     .map((row) => row.sheetId as string);
 
   const allSelected =
@@ -114,6 +116,7 @@ export function ResultsTable({
           <option value="published">Published</option>
         </select>
 
+                {canManage ? (
         <div className="ml-auto flex items-center gap-3">
           <span className="text-sm text-slate-500">
             {chosen.length} selected
@@ -124,6 +127,7 @@ export function ResultsTable({
             onDone={() => setSelected(new Set())}
           />
         </div>
+        ) : null}
       </div>
 
       <Table>
@@ -137,6 +141,7 @@ export function ResultsTable({
                 disabled={selectable.length === 0}
                 onChange={toggleAll}
                 aria-label="Select all submitted sheets shown"
+                hidden={!canManage}
               />
             </TableHead>
             <TableHead>Class</TableHead>
@@ -165,7 +170,7 @@ export function ResultsTable({
                 href={row.sheetId ? `/admin/results/${row.sheetId}` : null}
               >
                 <TableCell>
-                  {row.state === "submitted" && row.sheetId ? (
+                  {canManage && row.state === "submitted" && row.sheetId ? (
                     <input
                       type="checkbox"
                       className="size-4"
@@ -185,7 +190,7 @@ export function ResultsTable({
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-end gap-2">
-                    {row.state === "submitted" && row.sheetId ? (
+                    {canManage && row.state === "submitted" && row.sheetId ? (
                       <ReopenResultButton
                         sheetId={row.sheetId}
                         label={`${row.className} ${row.subjectName}`}

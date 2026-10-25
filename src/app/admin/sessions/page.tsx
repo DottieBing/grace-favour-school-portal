@@ -33,7 +33,7 @@ function formatDate(value: string) {
 }
 
 async function SessionsContent() {
-  await requireAreaAccess("sessions");
+  const { canManage } = await requireAreaAccess("sessions");
 
   const admin = createAdminClient();
 
@@ -61,7 +61,7 @@ async function SessionsContent() {
             Each session has three terms. One term is current at a time.
           </p>
         </div>
-        <CreateSessionSheet />
+        {canManage ? <CreateSessionSheet /> : null}
       </div>
 
       {error ? (
@@ -120,6 +120,7 @@ async function SessionsContent() {
                       {formatDate(term.end_date)}
                     </p>
 
+                                        {canManage ? (
                     <div className="mt-4 flex flex-wrap gap-2">
                       {!term.is_current ? (
                         <SetCurrentButton
@@ -134,6 +135,7 @@ async function SessionsContent() {
                         endDate={term.end_date}
                       />
                     </div>
+                    ) : null}
                   </div>
                 ))}
               </div>

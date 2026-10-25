@@ -31,7 +31,7 @@ function first<T>(value: T | T[] | null): T | null {
 }
 
 async function StudentsContent() {
-  await requireAreaAccess("students");
+  const { canManage } = await requireAreaAccess("students");
 
   const admin = createAdminClient();
 
@@ -84,6 +84,7 @@ async function StudentsContent() {
           </p>
         </div>
 
+               {canManage ? (
         <div className="flex flex-wrap gap-3">
           <Link
             href="/admin/students/import"
@@ -100,6 +101,7 @@ async function StudentsContent() {
             Add student
           </Link>
         </div>
+        ) : null}
       </div>
 
       {failed ? (

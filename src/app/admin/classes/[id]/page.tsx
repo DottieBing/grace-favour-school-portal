@@ -21,7 +21,7 @@ import {
 } from "@/components/classes/class-teachers";
 
 async function ClassContent({ params }: { params: Promise<{ id: string }> }) {
-  await requireAreaAccess("classes");
+  const { canManage } = await requireAreaAccess("classes");
   const { id } = await params;
 
   if (!z.uuid().safeParse(id).success) {
@@ -219,6 +219,7 @@ async function ClassContent({ params }: { params: Promise<{ id: string }> }) {
           Teachers can only be assigned to subjects ticked here.
         </p>
 
+                <fieldset disabled={!canManage} className="m-0 min-w-0 border-0 p-0">
         <ClassSubjectsForm
           key={[...(subjectsByClass.get(id) ?? [])].sort().join(",")}
           classId={id}
@@ -226,6 +227,7 @@ async function ClassContent({ params }: { params: Promise<{ id: string }> }) {
           selected={subjectsByClass.get(id) ?? []}
           otherClasses={otherClasses}
         />
+        </fieldset>
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-6">
@@ -242,6 +244,7 @@ async function ClassContent({ params }: { params: Promise<{ id: string }> }) {
             assigning teachers.
           </p>
         ) : (
+        <fieldset disabled={!canManage} className="m-0 min-w-0 border-0 p-0">
           <ClassTeachers
             key={assignments
               .map((item) => `${item.id}:${item.isClassTeacher}`)
@@ -251,6 +254,7 @@ async function ClassContent({ params }: { params: Promise<{ id: string }> }) {
             teachers={teacherOptions}
             subjectChoices={subjectChoices}
           />
+          </fieldset>
         )}
       </section>
     </div>

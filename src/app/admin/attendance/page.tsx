@@ -30,7 +30,7 @@ async function OverviewContent({
 }: {
   searchParams: Promise<{ date?: string }>;
 }) {
-  await requireAreaAccess("attendance");
+  const { canManage } = await requireAreaAccess("attendance");
 
   const { date: requested } = await searchParams;
   const today = todayInSchool();
@@ -235,14 +235,14 @@ async function OverviewContent({
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-2">
-                        {register?.status === "submitted" ? (
+                        {canManage && register?.status === "submitted" ? (
                           <ReopenButton
                             registerId={register.id}
                             className={item.name as string}
                           />
                         ) : null}
                         <Link href={href} className={linkClass}>
-                          {register ? "View / correct" : "Mark register"}
+                          {!canManage ? "View" : register ? "View / correct" : "Mark register"}
                         </Link>
                       </div>
                     </TableCell>
