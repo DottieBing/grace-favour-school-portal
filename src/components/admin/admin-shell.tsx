@@ -65,7 +65,13 @@ const navigation: NavigationItem[] = [
     href: "/admin/results",
     area: "results",
   },
-  { label: "Fees & Payments", icon: Wallet, section: "Finance", ownerOnly: true },
+  {
+    label: "Fees & Payments",
+    icon: Wallet,
+    href: "/admin/fees",
+    section: "Finance",
+    area: "fees",
+  },
   { label: "Timetable", icon: CalendarDays, section: "Administration", ownerOnly: true },
   {
     label: "Academic Sessions",

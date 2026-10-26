@@ -11,6 +11,7 @@ const NAV = [
   { href: "/portal", label: "Overview", exact: true },
   { href: "/portal/results", label: "Results", exact: false },
   { href: "/portal/attendance", label: "Attendance", exact: false },
+  { href: "/portal/fees", label: "Fees", exact: false },
   { href: "/portal/account", label: "Account", exact: false },
 ];
 
@@ -98,15 +99,7 @@ export function PortalShell({
               </Link>
             );
           })}
-          <span
-            aria-disabled="true"
-            className="flex cursor-not-allowed items-center gap-2 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium text-[#A2AAA5]"
-          >
-            Fees
-            <span className="rounded-full bg-[#EEF1EC] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
-              Soon
-            </span>
-          </span>
+          
         </nav>
       </header>
 
