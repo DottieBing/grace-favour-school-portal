@@ -11,7 +11,7 @@ import {
   type ValidationSummary,
 } from "@/lib/students/import-schema";
 
-const MAX_BYTES = 5 * 1024 * 1024;
+const MAX_BYTES = 4 * 1024 * 1024;
 
 export async function POST(request: Request) {
   const access = await getAdminAccess("students", "manage");

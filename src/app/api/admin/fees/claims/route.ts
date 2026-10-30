@@ -9,7 +9,7 @@ import { amountSchema } from "@/lib/fees/money";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { detectReceiptType } from "@/lib/uploads/receipt-type";
 
-const MAX_BYTES = 5 * 1024 * 1024;
+const MAX_BYTES = 4 * 1024 * 1024;
 const MAX_WAITING = 5;
 
 export async function POST(request: Request) {

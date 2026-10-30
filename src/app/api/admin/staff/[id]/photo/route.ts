@@ -6,7 +6,7 @@ import { z } from "zod";
 import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-const MAX_BYTES = 5 * 1024 * 1024;
+const MAX_BYTES = 4 * 1024 * 1024;
 
 // Checks the file's real contents, not just the type the browser claims.
 function detectImageType(bytes: Uint8Array) {

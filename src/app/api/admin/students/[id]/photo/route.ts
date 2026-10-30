@@ -7,7 +7,7 @@ import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { detectImageType } from "@/lib/uploads/image-type";
 
-const MAX_BYTES = 5 * 1024 * 1024;
+const MAX_BYTES = 4 * 1024 * 1024;
 
 export async function POST(
   request: Request,
