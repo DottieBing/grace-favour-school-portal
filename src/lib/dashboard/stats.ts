@@ -6,6 +6,7 @@ import { getCurrentTerm } from "@/lib/academic/current-term";
 import { isWeekday, todayInSchool } from "@/lib/attendance/dates";
 import { findTermForDate } from "@/lib/attendance/terms";
 import type { DashboardData } from "@/lib/dashboard/types";
+import { loadBalances } from "@/lib/fees/balances";
 
 type Admin = ReturnType<typeof createAdminClient>;
 
@@ -51,7 +52,9 @@ async function dayCounts(admin: Admin, date: string) {
   return { total: total.count ?? 0, absent: absent.count ?? 0 };
 }
 
-export async function loadDashboard(): Promise<DashboardData | null> {
+export async function loadDashboard(
+  options: { fees: boolean } = { fees: false },
+): Promise<DashboardData | null> {
   const admin = createAdminClient();
   const today = todayInSchool();
   const dates = weekDates(today);
@@ -198,6 +201,37 @@ export async function loadDashboard(): Promise<DashboardData | null> {
     };
   }
 
+  // Fees are only worked out for people who may see them.
+  let fees = { collected: 0, outstanding: 0, reviewing: 0 };
+
+  if (options.fees) {
+    const [balances, reviewingResult] = await Promise.all([
+      loadBalances(admin),
+      admin
+        .from("fee_payments")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "reviewing"),
+    ]);
+
+    if (!balances || reviewingResult.error) {
+      console.error(
+        "Unable to load fee totals:",
+        reviewingResult.error?.message ?? "balances",
+      );
+      return null;
+    }
+
+    fees = {
+      collected:
+        Math.round(balances.reduce((sum, item) => sum + item.paid, 0) * 100) / 100,
+      outstanding:
+        Math.round(
+          balances.reduce((sum, item) => sum + Math.max(0, item.balance), 0) * 100,
+        ) / 100,
+      reviewing: reviewingResult.count ?? 0,
+    };
+  }
+
   const staff = staffResult.data ?? [];
 
   return {
@@ -223,6 +257,11 @@ export async function loadDashboard(): Promise<DashboardData | null> {
     bySession: [...perSession.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([name, count]) => ({ name, students: count })),
-    pending: { results: results.submitted, attendance: attendancePending },
+    fees,
+    pending: {
+      results: results.submitted,
+      attendance: attendancePending,
+      payments: fees.reviewing,
+    },
   };
 }

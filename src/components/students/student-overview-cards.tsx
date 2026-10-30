@@ -1,5 +1,8 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+import { loadLedger } from "@/lib/fees/ledger";
+import { naira } from "@/lib/fees/money";
+import { FEE_STATUS_LABELS } from "@/lib/fees/status";
 import { loadStudentResults } from "@/lib/results/student-results";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 function Card({
   label,
@@ -27,16 +30,23 @@ function Card({
   );
 }
 
-export async function StudentOverviewCards({ studentId }: { studentId: string }) {
+export async function StudentOverviewCards({
+  studentId,
+  showFees,
+}: {
+  studentId: string;
+  showFees: boolean;
+}) {
   const admin = createAdminClient();
 
-  const [attendanceResult, terms] = await Promise.all([
+  const [attendanceResult, terms, ledger] = await Promise.all([
     admin
       .from("attendance_records")
       .select("status, attendance_registers!inner(status)")
       .eq("student_id", studentId)
       .eq("attendance_registers.status", "submitted"),
     loadStudentResults(admin, studentId),
+    showFees ? loadLedger(admin, studentId) : Promise.resolve(null),
   ]);
 
   if (attendanceResult.error) {
@@ -66,13 +76,24 @@ export async function StudentOverviewCards({ studentId }: { studentId: string })
       ? `${latest.termName}, ${latest.sessionName}`
       : "No published results";
 
+  let feeValue = "-";
+  let feeNote = "Restricted";
+
+  if (showFees) {
+    if (!ledger) {
+      feeNote = "Couldn't load";
+    } else if (ledger.charges.length === 0) {
+      feeNote = "No charges yet";
+    } else {
+      feeValue =
+        ledger.balance < 0 ? `${naira(-ledger.balance)} credit` : naira(ledger.balance);
+      feeNote = FEE_STATUS_LABELS[ledger.status];
+    }
+  }
+
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      <Card
-        label="Attendance rate"
-        value={attendanceValue}
-        note={attendanceNote}
-      />
+      <Card label="Attendance rate" value={attendanceValue} note={attendanceNote} />
       <Card
         label="Current average"
         value={latest ? `${latest.average}%` : "-"}
@@ -83,7 +104,7 @@ export async function StudentOverviewCards({ studentId }: { studentId: string })
         value={latest?.position ? `${latest.position} of ${latest.outOf}` : "-"}
         note={latest ? latest.className : resultsNote}
       />
-      <Card label="Fee balance" value="-" note="Not set up yet" />
+      <Card label="Fee balance" value={feeValue} note={feeNote} />
     </div>
   );
 }

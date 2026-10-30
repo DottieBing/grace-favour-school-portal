@@ -10,6 +10,7 @@ import {
   Plus,
   Upload,
   Users,
+  Wallet,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -23,6 +24,7 @@ import {
 } from "recharts";
 
 import type { DashboardData, DashboardVisibility } from "@/lib/dashboard/types";
+import { naira } from "@/lib/fees/money";
 
 const TEAL = "#0D5C63";
 const GOLD = "#C9A84C";
@@ -87,10 +89,12 @@ export default function AdminDashboard({
   const staffTotal = data.staff.teaching + data.staff.nonTeaching;
   const maxInClass = Math.max(1, ...data.byClass.map((item) => item.students));
   const hasWeekly = data.weekly.some((item) => item.present !== null);
-  const pendingTotal = data.pending.results + data.pending.attendance;
-  const anyStats = show.students || show.staff || show.attendance || show.results;
+  const pendingTotal =
+    data.pending.results + data.pending.attendance + data.pending.payments;
+  const anyStats =
+    show.students || show.staff || show.attendance || show.results || show.fees;
   const anyCharts = show.attendance || show.students;
-  const showPending = show.results || show.attendance;
+  const showPending = show.results || show.attendance || show.fees;
 
   const tasks = [
     {
@@ -118,6 +122,19 @@ export default function AdminDashboard({
       icon: CalendarCheck,
       background: "#F1E9FF",
       color: "#7651A8",
+    },
+    {
+      show: show.fees,
+      title: "Receipts awaiting review",
+      description:
+        data.pending.payments === 0
+          ? "No receipts waiting"
+          : `${data.pending.payments} receipt${data.pending.payments === 1 ? "" : "s"} to verify`,
+      count: data.pending.payments,
+      href: "/admin/fees/review",
+      icon: Wallet,
+      background: "#E0F2E9",
+      color: "#176B45",
     },
   ].filter((task) => task.show);
 
@@ -232,6 +249,26 @@ export default function AdminDashboard({
               icon={FileCheck2}
               background="#F9EED5"
               color="#99721D"
+            />
+          ) : null}
+          {show.fees ? (
+            <StatCard
+              title="Fees collected"
+              value={naira(data.fees.collected)}
+              note="Verified payments, active students"
+              icon={Wallet}
+              background="#E0F2E9"
+              color="#176B45"
+            />
+          ) : null}
+          {show.fees ? (
+            <StatCard
+              title="Fees outstanding"
+              value={naira(data.fees.outstanding)}
+              note={`${data.fees.reviewing} receipt${data.fees.reviewing === 1 ? "" : "s"} awaiting review`}
+              icon={Wallet}
+              background="#FDECEA"
+              color="#B84E40"
             />
           ) : null}
         </div>

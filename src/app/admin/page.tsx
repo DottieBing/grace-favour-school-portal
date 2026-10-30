@@ -30,6 +30,7 @@ function mask(data: DashboardData, show: DashboardVisibility): DashboardData {
       ? data.attendanceToday
       : { percent: null, submitted: 0, expected: 0 },
     results: show.results ? data.results : { published: 0, submitted: 0, total: 0 },
+    fees: show.fees ? data.fees : { collected: 0, outstanding: 0, reviewing: 0 },
     weekly: show.attendance ? data.weekly : [],
     weeklyAverage: show.attendance ? data.weeklyAverage : null,
     byClass: show.classes ? data.byClass : [],
@@ -37,6 +38,7 @@ function mask(data: DashboardData, show: DashboardVisibility): DashboardData {
     pending: {
       results: show.results ? data.pending.results : 0,
       attendance: show.attendance ? data.pending.attendance : 0,
+      payments: show.fees ? data.pending.payments : 0,
     },
   };
 }
@@ -51,10 +53,14 @@ export default async function AdminPage() {
     results: allows(permissions, "results", "view"),
     classes: allows(permissions, "classes", "view"),
     sessions: allows(permissions, "sessions", "view"),
+    fees: allows(permissions, "fees", "view"),
     addStudents: allows(permissions, "students", "manage"),
   };
 
-  const [term, data] = await Promise.all([getCurrentTerm(), loadDashboard()]);
+  const [term, data] = await Promise.all([
+    getCurrentTerm(),
+    loadDashboard({ fees: show.fees }),
+  ]);
 
   if (!data) {
     return (

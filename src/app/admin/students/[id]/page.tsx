@@ -18,6 +18,8 @@ import { StudentTabs } from "@/components/students/student-tabs";
 import { StudentAttendanceSection } from "@/components/students/student-attendance-section";
 import { StudentAcademicsSection } from "@/components/students/student-academics-section";
 import { StudentOverviewCards } from "@/components/students/student-overview-cards";
+import { allows } from "@/lib/auth/permissions";
+import { StudentFeesSection } from "@/components/students/student-fees-section";
 
 type GuardianRaw = {
   is_primary: boolean;
@@ -74,7 +76,8 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
 }
 
 async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
-  const { canManage } = await requireAreaAccess("students");
+  const { canManage, permissions } = await requireAreaAccess("students");
+  const canViewFees = allows(permissions, "fees", "view");
   const { id } = await params;
 
   if (!z.uuid().safeParse(id).success) {
@@ -189,7 +192,10 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
           <Suspense
             fallback={<div className="h-28 animate-pulse rounded-xl bg-slate-100" />}
           >
-            <StudentOverviewCards studentId={student.id as string} />
+            <StudentOverviewCards
+              studentId={student.id as string}
+              showFees={canViewFees}
+            />
           </Suspense>
 
           <Card title="Details">
@@ -249,10 +255,16 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
     {
       id: "fees",
       label: "Fees",
-      content: (
+      content: canViewFees ? (
+        <Suspense
+          fallback={<div className="h-40 animate-pulse rounded-xl bg-slate-100" />}
+        >
+          <StudentFeesSection studentId={student.id as string} />
+        </Suspense>
+      ) : (
         <EmptyState
-          title="No fee records yet"
-          text="The fee structure, payments, balance and receipts appear here once fees are set up."
+          title="No access"
+          text="You don't have access to fee information."
         />
       ),
     },
