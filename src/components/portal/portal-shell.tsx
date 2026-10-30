@@ -11,7 +11,7 @@ const NAV = [
   { href: "/portal", label: "Overview", exact: true },
   { href: "/portal/results", label: "Results", exact: false },
   { href: "/portal/attendance", label: "Attendance", exact: false },
-  { href: "/portal/fees", label: "Fees", exact: false },
+  { href: "/portal/timetable", label: "Timetable", exact: false },
   { href: "/portal/account", label: "Account", exact: false },
 ];
 

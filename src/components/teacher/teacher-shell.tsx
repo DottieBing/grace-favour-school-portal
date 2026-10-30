@@ -31,7 +31,7 @@ export function TeacherShell({
   }
 
   const onAttendance = pathname.startsWith("/teacher/attendance");
-    const onResults = pathname.startsWith("/teacher/results");  
+    const onTimetable = pathname.startsWith("/teacher/timetable");  
 
   return (
     <div className="min-h-screen bg-[#F6F8F5] text-[#203432]">
@@ -89,6 +89,17 @@ export function TeacherShell({
             }`}
           >
             Results
+          </Link>
+          <Link
+            href="/teacher/timetable"
+            aria-current={onTimetable ? "page" : undefined}
+            className={`rounded-md px-3 py-1.5 text-sm font-medium ${
+              onTimetable
+                ? "bg-[#0D5C63] text-white"
+                : "text-[#53645D] hover:bg-[#F1F5F2]"
+            }`}
+          >
+            Timetable
           </Link>
         </nav>
       </header>

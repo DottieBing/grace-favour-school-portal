@@ -10,6 +10,7 @@ export type PortalStudent = {
   name: string;
   admissionNumber: string;
   className: string | null;
+  classId: string | null;
 };
 
 type Raw = {
@@ -19,6 +20,7 @@ type Raw = {
   middle_name: string | null;
   last_name: string;
   status: string;
+  current_class_id: string | null;
   classes: { name: string } | { name: string }[] | null;
 };
 
@@ -30,7 +32,7 @@ export async function requireStudent(): Promise<PortalStudent> {
   const { data, error } = await admin
     .from("students")
     .select(
-      "id, admission_number, first_name, middle_name, last_name, status, classes(name)",
+        "id, admission_number, first_name, middle_name, last_name, status, current_class_id, classes(name)",
     )
     .eq("user_id", user.id)
     .maybeSingle();
@@ -55,5 +57,6 @@ export async function requireStudent(): Promise<PortalStudent> {
       .join(" "),
     admissionNumber: row.admission_number,
     className: cls?.name ?? null,
+      classId: row.current_class_id,
   };
 }

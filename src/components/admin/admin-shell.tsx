@@ -72,7 +72,13 @@ const navigation: NavigationItem[] = [
     section: "Finance",
     area: "fees",
   },
-  { label: "Timetable", icon: CalendarDays, section: "Administration", ownerOnly: true },
+  {
+    label: "Timetable",
+    icon: CalendarDays,
+    href: "/admin/timetable",
+    section: "Administration",
+    area: "timetable",
+  },
   {
     label: "Academic Sessions",
     icon: CalendarRange,
@@ -81,7 +87,7 @@ const navigation: NavigationItem[] = [
   },
   { label: "Grading", icon: Scale, href: "/admin/grading", area: "grading" },
   { label: "Users & Access", icon: UserCog, href: "/admin/users", ownerOnly: true },
-  { label: "Settings", icon: Settings, ownerOnly: true },
+  { label: "Settings", icon: Settings, href: "/admin/settings", ownerOnly: true },
 ];
 
 // Each item belongs to the heading above it.

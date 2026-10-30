@@ -9,6 +9,7 @@ import { requireStudent } from "@/lib/portal/student";
 import { loadStudentResults } from "@/lib/results/student-results";
 import { SchoolLogo } from "@/components/brand/school-logo";
 import { PrintButton } from "@/components/students/print-button";
+import { getSchoolProfile } from "@/lib/settings/school";
 
 async function ReportContent({ params }: { params: Promise<{ termId: string }> }) {
   const student = await requireStudent();
@@ -19,6 +20,7 @@ async function ReportContent({ params }: { params: Promise<{ termId: string }> }
   }
 
   const admin = createAdminClient();
+  const school = await getSchoolProfile();
 
   const [terms, attendanceResult] = await Promise.all([
     loadStudentResults(admin, student.id),
@@ -72,7 +74,7 @@ async function ReportContent({ params }: { params: Promise<{ termId: string }> }
             <SchoolLogo size={56} />
           </div>
           <h1 className="text-xl font-semibold text-slate-900">
-            Grace &amp; Favour Model School
+            {school.name}
           </h1>
           <p className="mt-1 text-sm text-slate-600">
             Report card · {term.termName}, {term.sessionName}

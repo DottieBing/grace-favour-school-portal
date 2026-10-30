@@ -9,6 +9,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { loadStudentResults } from "@/lib/results/student-results";
 import { PrintButton } from "@/components/students/print-button";
 import { SchoolLogo } from "@/components/brand/school-logo";
+import { getSchoolProfile } from "@/lib/settings/school";
 
 async function ReportContent({
   params,
@@ -23,6 +24,7 @@ async function ReportContent({
   }
 
   const admin = createAdminClient();
+  const school = await getSchoolProfile();
 
   const [studentResult, terms, attendanceResult] = await Promise.all([
     admin
@@ -94,7 +96,7 @@ async function ReportContent({
             <SchoolLogo size={56} />
         </div>
           <h1 className="text-xl font-semibold text-slate-900">
-            Grace &amp; Favour Model School
+            {school.name}
           </h1>
           <p className="mt-1 text-sm text-slate-600">
             Report card · {term.termName}, {term.sessionName}

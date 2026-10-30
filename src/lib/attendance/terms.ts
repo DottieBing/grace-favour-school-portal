@@ -7,10 +7,10 @@ type Admin = ReturnType<typeof createAdminClient>;
 export type TermInfo = { id: string; name: string; sessionId: string };
 
 export type TermLookup =
-  | { ok: true; term: TermInfo | null }
+  | { ok: true; term: TermInfo | null; holiday?: string }
   | { ok: false };
 
-/** The term whose dates include the given day, if any. */
+/** The term whose dates include the given day. A school holiday counts as no term. */
 export async function findTermForDate(
   admin: Admin,
   date: string,
@@ -29,14 +29,30 @@ export async function findTermForDate(
 
   const row = data?.[0];
 
+  if (!row) return { ok: true, term: null };
+
+  const { data: holidays, error: holidayError } = await admin
+    .from("school_holidays")
+    .select("name")
+    .lte("start_date", date)
+    .gte("end_date", date)
+    .limit(1);
+
+  if (holidayError) {
+    console.error("Unable to check holidays:", holidayError.message);
+    return { ok: false };
+  }
+
+  if (holidays && holidays.length > 0) {
+    return { ok: true, term: null, holiday: holidays[0].name as string };
+  }
+
   return {
     ok: true,
-    term: row
-      ? {
-          id: row.id as string,
-          name: row.name as string,
-          sessionId: row.session_id as string,
-        }
-      : null,
+    term: {
+      id: row.id as string,
+      name: row.name as string,
+      sessionId: row.session_id as string,
+    },
   };
 }

@@ -7,6 +7,7 @@ export const AREAS = [
   { key: "grading", label: "Grading" },
   { key: "sessions", label: "Academic sessions" },
   { key: "fees", label: "Fees" },
+  { key: "timetable", label: "Timetable" },
 ] as const;
 
 export type Area = (typeof AREAS)[number]["key"];

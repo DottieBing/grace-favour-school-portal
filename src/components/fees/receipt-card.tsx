@@ -1,7 +1,8 @@
 import { SchoolLogo } from "@/components/brand/school-logo";
 import { METHOD_LABELS, formatDay, naira } from "@/lib/fees/money";
+import { getSchoolProfile } from "@/lib/settings/school";
 
-export function ReceiptCard({
+export async function ReceiptCard({
   receiptNumber,
   reversed,
   studentName,
@@ -29,7 +30,7 @@ export function ReceiptCard({
           <SchoolLogo size={56} />
         </div>
         <h1 className="text-xl font-semibold text-slate-900">
-          Grace &amp; Favour Model School
+          {school.name}
         </h1>
         <p className="mt-1 text-sm text-slate-600">Payment receipt</p>
       </header>

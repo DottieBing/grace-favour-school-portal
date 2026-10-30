@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ShieldCheck } from "lucide-react";
 
-export const LOGO_SRC = "/logo.svg";
+export const LOGO_SRC = "/api/logo";
 
 export function SchoolLogo({ size = 40 }: { size?: number }) {
   const [failed, setFailed] = useState(false);
