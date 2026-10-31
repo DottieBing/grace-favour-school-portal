@@ -23,6 +23,8 @@ export async function ReceiptCard({
   method: string;
   reference: string | null;
 }) {
+  const school = await getSchoolProfile();
+
   return (
     <div className="mx-auto max-w-xl space-y-6 rounded-xl border border-slate-200 bg-white p-8 print:max-w-none print:rounded-none print:border-0 print:p-0">
       <header className="border-b border-slate-200 pb-4 text-center">
