@@ -4,7 +4,14 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
-import { SchoolLogo } from "../brand/school-logo";
+
+import { SchoolLogo } from "@/components/brand/school-logo";
+
+const NAV = [
+  { href: "/teacher/attendance", label: "Attendance" },
+  { href: "/teacher/results", label: "Results" },
+  { href: "/teacher/timetable", label: "Timetable" },
+];
 
 export function TeacherShell({
   name,
@@ -29,9 +36,6 @@ export function TeacherShell({
       router.refresh();
     }
   }
-
-  const onAttendance = pathname.startsWith("/teacher/attendance");
-    const onTimetable = pathname.startsWith("/teacher/timetable");  
 
   return (
     <div className="min-h-screen bg-[#F6F8F5] text-[#203432]">
@@ -67,40 +71,25 @@ export function TeacherShell({
           </div>
         </div>
 
-        <nav className="mx-auto flex max-w-4xl gap-1 px-4 pb-2">
-          <Link
-            href="/teacher/attendance"
-            aria-current={onAttendance ? "page" : undefined}
-            className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-              onAttendance
-                ? "bg-[#0D5C63] text-white"
-                : "text-[#53645D] hover:bg-[#F1F5F2]"
-            }`}
-          >
-            Attendance
-          </Link>
-          <Link
-            href="/teacher/results"
-            aria-current={onResults ? "page" : undefined}
-            className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-              onResults
-                ? "bg-[#0D5C63] text-white"
-                : "text-[#53645D] hover:bg-[#F1F5F2]"
-            }`}
-          >
-            Results
-          </Link>
-          <Link
-            href="/teacher/timetable"
-            aria-current={onTimetable ? "page" : undefined}
-            className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-              onTimetable
-                ? "bg-[#0D5C63] text-white"
-                : "text-[#53645D] hover:bg-[#F1F5F2]"
-            }`}
-          >
-            Timetable
-          </Link>
+        <nav className="mx-auto flex max-w-4xl gap-1 overflow-x-auto px-4 pb-2">
+          {NAV.map((item) => {
+            const active = pathname.startsWith(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
+                  active
+                    ? "bg-[#0D5C63] text-white"
+                    : "text-[#53645D] hover:bg-[#F1F5F2]"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
       </header>
 
