@@ -8,9 +8,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export type PortalStudent = {
   id: string;
   name: string;
+  firstName: string;
   admissionNumber: string;
   className: string | null;
   classId: string | null;
+  photoUrl: string | null;
 };
 
 type Raw = {
@@ -21,6 +23,7 @@ type Raw = {
   last_name: string;
   status: string;
   current_class_id: string | null;
+  photo_path: string | null;
   classes: { name: string } | { name: string }[] | null;
 };
 
@@ -32,7 +35,7 @@ export async function requireStudent(): Promise<PortalStudent> {
   const { data, error } = await admin
     .from("students")
     .select(
-        "id, admission_number, first_name, middle_name, last_name, status, current_class_id, classes(name)",
+      "id, admission_number, first_name, middle_name, last_name, status, current_class_id, photo_path, classes(name)",
     )
     .eq("user_id", user.id)
     .maybeSingle();
@@ -50,13 +53,23 @@ export async function requireStudent(): Promise<PortalStudent> {
 
   const cls = Array.isArray(row.classes) ? row.classes[0] : row.classes;
 
+  let photoUrl: string | null = null;
+
+  if (row.photo_path) {
+    const { data: signed } = await admin.storage
+      .from("student-photos")
+      .createSignedUrl(row.photo_path, 3600);
+
+    photoUrl = signed?.signedUrl ?? null;
+  }
+
   return {
     id: row.id,
-    name: [row.first_name, row.middle_name, row.last_name]
-      .filter(Boolean)
-      .join(" "),
+    name: [row.first_name, row.middle_name, row.last_name].filter(Boolean).join(" "),
+    firstName: row.first_name,
     admissionNumber: row.admission_number,
     className: cls?.name ?? null,
-      classId: row.current_class_id,
+    classId: row.current_class_id,
+    photoUrl,
   };
 }

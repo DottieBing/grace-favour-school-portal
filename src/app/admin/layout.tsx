@@ -4,10 +4,14 @@ import { requireAdminSession } from "@/lib/auth/access";
 import { getCurrentTerm } from "@/lib/academic/current-term";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { AdminShell } from "@/components/admin/admin-shell";
+import { connection } from "next/server";
+import { getSchoolProfile } from "@/lib/settings/school";
 
 async function ShellGate({ children }: { children: ReactNode }) {
+  await connection();
   const { user, isOwner, permissions } = await requireAdminSession();
   const term = await getCurrentTerm();
+  const school = await getSchoolProfile();
 
   let roleLabel = "Super Admin";
 
@@ -25,6 +29,7 @@ async function ShellGate({ children }: { children: ReactNode }) {
 
   return (
     <AdminShell
+      schoolName={school.name}
       email={user.email ?? ""}
       roleLabel={roleLabel}
       isOwner={isOwner}

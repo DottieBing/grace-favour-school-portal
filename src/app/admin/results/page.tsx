@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense } from "react";
 
 import { requireAreaAccess } from "@/lib/auth/access";
@@ -129,6 +130,21 @@ async function ResultsContent() {
           waiting for review, {rows.length} subject sheets in total.
         </p>
       </div>
+
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold text-slate-900">By class</h2>
+        <div className="flex flex-wrap gap-2">
+          {classes.map((item) => (
+            <Link
+              key={item.id}
+              href={`/admin/results/classes/${item.id}`}
+              className="inline-flex h-8 items-center rounded-md border border-slate-200 bg-white px-3 text-sm font-medium text-slate-900 hover:bg-slate-50"
+            >
+              {item.name}
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <ResultsTable rows={rows} classes={classes} canManage={canManage} />
     </div>

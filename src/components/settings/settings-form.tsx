@@ -18,6 +18,7 @@ export type SettingsData = {
   admissionPrefix: string;
   timetableDays: number[];
   teacherClashCheck: boolean;
+  attendanceTime: string;
 };
 
 export function SettingsForm({ initial }: { initial: SettingsData }) {
@@ -121,7 +122,20 @@ export function SettingsForm({ initial }: { initial: SettingsData }) {
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-sm font-semibold text-slate-900">Timetable</h3>
+        <h3 className="text-sm font-semibold text-slate-900">Timetable &amp; attendance</h3>
+        <div className="space-y-1.5 sm:w-1/3">
+          <Label htmlFor="s-att">Attendance time</Label>
+          <Input
+            id="s-att"
+            type="time"
+            required
+            value={values.attendanceTime}
+            onChange={(e) => set("attendanceTime", e.target.value)}
+          />
+          <p className="text-xs text-slate-500">
+            When teachers&apos; &quot;Take attendance&quot; task starts glowing on their dashboard.
+          </p>
+        </div>
         <div>
           <p className="mb-2 text-sm text-slate-700">Days the school teaches</p>
           <div className="flex flex-wrap gap-3">

@@ -19,9 +19,12 @@ import {
   type SubjectChoice,
   type TeacherOption,
 } from "@/components/classes/class-teachers";
+import { allows } from "@/lib/auth/permissions";
+import { ClassStudentsSection } from "@/components/classes/class-students-section";
 
 async function ClassContent({ params }: { params: Promise<{ id: string }> }) {
-  const { canManage } = await requireAreaAccess("classes");
+  const { canManage, permissions } = await requireAreaAccess("classes");
+  const canMoveStudents = allows(permissions, "students", "manage");
   const { id } = await params;
 
   if (!z.uuid().safeParse(id).success) {
@@ -256,6 +259,18 @@ async function ClassContent({ params }: { params: Promise<{ id: string }> }) {
           />
           </fieldset>
         )}
+      </section>
+
+      <section className="rounded-xl border border-slate-200 bg-white p-6">
+        <h2 className="mb-4 text-sm font-semibold text-slate-900">Students</h2>
+        <Suspense fallback={<div className="h-24 animate-pulse rounded-lg bg-slate-100" />}>
+          <ClassStudentsSection
+            classId={id}
+            className={cls.name as string}
+            capacity={(cls.capacity as number | null) ?? null}
+            canMove={canMoveStudents}
+          />
+        </Suspense>
       </section>
     </div>
   );

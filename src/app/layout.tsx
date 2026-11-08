@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -21,6 +21,13 @@ export const metadata: Metadata = {
   },
   description:
     "The school administration platform for Grace & Favour Model School.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0D5C63",
 };
 
 export default function RootLayout({

@@ -36,7 +36,7 @@ async function UsersContent() {
   const [usersResult, permissionsResult, templatesResult] = await Promise.all([
     admin
       .from("admin_users")
-      .select("user_id, job_title, profiles(full_name, email, is_active)")
+      .select("user_id, job_title, profiles!user_id(full_name, email, is_active)")
       .order("created_at", { ascending: false }),
     admin.from("admin_permissions").select("user_id, area, level"),
     admin

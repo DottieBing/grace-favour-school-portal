@@ -1,109 +1,40 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import type { ReactNode } from "react";
+import { FileCheck2, LayoutDashboard, UserRound, Wallet } from "lucide-react";
 
-import { SchoolLogo } from "@/components/brand/school-logo";
+import { AppShell, type NavItem } from "@/components/kit/app-shell";
 
-const NAV = [
-  { href: "/portal", label: "Overview", exact: true },
-  { href: "/portal/results", label: "Results", exact: false },
-  { href: "/portal/attendance", label: "Attendance", exact: false },
-  { href: "/portal/timetable", label: "Timetable", exact: false },
-  { href: "/portal/account", label: "Account", exact: false },
+const ITEMS: NavItem[] = [
+  { href: "/portal", label: "Home", icon: LayoutDashboard, exact: true },
+  { href: "/portal/results", label: "Results", icon: FileCheck2 },
+  { href: "/portal/fees", label: "Fees", icon: Wallet },
+  { href: "/portal/account", label: "Account", icon: UserRound },
 ];
 
 export function PortalShell({
+  schoolName,
   name,
-  className,
+  photoUrl,
   term,
   children,
 }: {
+  schoolName: string;
   name: string;
-  className: string | null;
+  photoUrl: string | null;
   term: { sessionName: string; termName: string } | null;
   children: ReactNode;
 }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [signingOut, setSigningOut] = useState(false);
-
-  async function signOut() {
-    setSigningOut(true);
-
-    try {
-      await fetch("/api/auth/signout", { method: "POST" });
-    } finally {
-      router.replace("/login");
-      router.refresh();
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-[#F6F8F5] text-[#203432]">
-      <header className="sticky top-0 z-30 border-b border-[#E8ECE7] bg-white/95 backdrop-blur-md print:hidden">
-        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-[#E2E8E1] bg-white p-1">
-              <SchoolLogo size={32} />
-            </div>
-            <div>
-              <p className="text-sm font-bold leading-4">Grace & Favour</p>
-              <p className="text-xs text-[#89938E]">
-                {term
-                  ? `${term.sessionName} · ${term.termName}`
-                  : "Model School"}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="hidden text-right sm:block">
-              <p className="max-w-[220px] truncate text-xs font-semibold">
-                {name}
-              </p>
-              <p className="text-xs text-[#89938E]">{className ?? "No class"}</p>
-            </div>
-            <button
-              type="button"
-              onClick={signOut}
-              disabled={signingOut}
-              className="inline-flex h-8 items-center gap-2 rounded-md border border-[#E2E8E1] px-3 text-xs font-medium text-[#40534C] hover:bg-[#F8FAF7] disabled:opacity-60"
-            >
-              <LogOut size={14} />
-              {signingOut ? "Signing out..." : "Sign out"}
-            </button>
-          </div>
-        </div>
-
-        <nav className="mx-auto flex max-w-4xl gap-1 overflow-x-auto px-4 pb-2">
-          {NAV.map((item) => {
-            const active = item.exact
-              ? pathname === item.href
-              : pathname.startsWith(item.href);
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={`whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
-                  active
-                    ? "bg-[#0D5C63] text-white"
-                    : "text-[#53645D] hover:bg-[#F1F5F2]"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-          
-        </nav>
-      </header>
-
-      <main className="mx-auto max-w-4xl">{children}</main>
-    </div>
+    <AppShell
+      schoolName={schoolName}
+      name={name}
+      roleLabel="Student"
+      photoUrl={photoUrl}
+      term={term}
+      items={ITEMS}
+    >
+      {children}
+    </AppShell>
   );
 }

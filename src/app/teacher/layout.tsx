@@ -1,30 +1,32 @@
 import { Suspense, type ReactNode } from "react";
+import { connection } from "next/server";
 
 import { requirePageAccess } from "@/lib/auth/access";
 import { getCurrentTerm } from "@/lib/academic/current-term";
+import { loadTeacherProfile } from "@/lib/teacher/profile";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { TeacherShell } from "@/components/teacher/teacher-shell";
+import { getSchoolProfile } from "@/lib/settings/school";
 
 async function ShellGate({ children }: { children: ReactNode }) {
+  await connection();
+
   const { user } = await requirePageAccess("teacher");
   const admin = createAdminClient();
 
-  const [staffResult, term] = await Promise.all([
-    admin
-      .from("staff")
-      .select("full_name")
-      .eq("user_id", user.id)
-      .maybeSingle(),
+  const [profile, term, school] = await Promise.all([
+    loadTeacherProfile(admin, user.id),
     getCurrentTerm(),
+    getSchoolProfile(),
   ]);
 
-  const name =
-    (staffResult.data?.full_name as string | null | undefined) ??
-    user.email ??
-    "Teacher";
-
   return (
-    <TeacherShell name={name} term={term}>
+    <TeacherShell
+      schoolName={school.name}
+      name={profile?.name ?? user.email ?? "Teacher"}
+      photoUrl={profile?.photoUrl ?? null}
+      term={term}
+    >
       {children}
     </TeacherShell>
   );
@@ -32,7 +34,7 @@ async function ShellGate({ children }: { children: ReactNode }) {
 
 export default function TeacherLayout({ children }: { children: ReactNode }) {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F6F8F5]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-[#F4F7F5]" />}>
       <ShellGate>{children}</ShellGate>
     </Suspense>
   );

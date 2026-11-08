@@ -28,7 +28,10 @@ const schema = z.object({
   timetableDays: z
     .array(z.number().int().min(1).max(7))
     .min(1, "Choose at least one school day for the timetable."),
-  teacherClashCheck: z.boolean(),
+    teacherClashCheck: z.boolean(),
+  attendanceTime: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Enter a valid attendance time."),
 });
 
 export async function PUT(request: Request) {
@@ -65,6 +68,7 @@ export async function PUT(request: Request) {
     admission_prefix: input.admissionPrefix,
     timetable_days: [...new Set(input.timetableDays)].sort((a, b) => a - b),
     teacher_clash_check: input.teacherClashCheck,
+    attendance_time: input.attendanceTime,
     updated_at: new Date().toISOString(),
   });
 

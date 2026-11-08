@@ -10,6 +10,7 @@ import { loadStudentResults } from "@/lib/results/student-results";
 import { SchoolLogo } from "@/components/brand/school-logo";
 import { PrintButton } from "@/components/students/print-button";
 import { getSchoolProfile } from "@/lib/settings/school";
+import { ordinal } from "@/lib/results/ordinal";
 
 async function ReportContent({ params }: { params: Promise<{ termId: string }> }) {
   const student = await requireStudent();
@@ -81,7 +82,7 @@ async function ReportContent({ params }: { params: Promise<{ termId: string }> }
           </p>
         </header>
 
-        <section className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-3">
+        <section className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
           <div>
             <div className="text-xs text-slate-500">Student</div>
             <div className="font-medium text-slate-900">{student.name}</div>
@@ -93,6 +94,12 @@ async function ReportContent({ params }: { params: Promise<{ termId: string }> }
           <div>
             <div className="text-xs text-slate-500">Class</div>
             <div className="text-slate-900">{term.className}</div>
+          </div>
+          <div>
+            <div className="text-xs text-slate-500">Position</div>
+            <div className="font-semibold text-slate-900">
+              {term.position ? `${ordinal(term.position)} of ${term.outOf}` : "-"}
+            </div>
           </div>
         </section>
 

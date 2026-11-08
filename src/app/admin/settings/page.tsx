@@ -58,6 +58,7 @@ async function SettingsContent() {
             admissionPrefix: profile.admissionPrefix,
             timetableDays: profile.timetableDays,
             teacherClashCheck: profile.teacherClashCheck,
+            attendanceTime: profile.attendanceTime,
           }}
         />
       </section>

@@ -12,6 +12,7 @@ export type SchoolProfile = {
   admissionPrefix: string;
   timetableDays: number[];
   teacherClashCheck: boolean;
+  attendanceTime: string;
 };
 
 const DEFAULTS: SchoolProfile = {
@@ -24,6 +25,7 @@ const DEFAULTS: SchoolProfile = {
   admissionPrefix: "GFMS",
   timetableDays: [1, 2, 3, 4, 5],
   teacherClashCheck: true,
+  attendanceTime: "08:30",
 };
 
 export async function getSchoolProfile(): Promise<SchoolProfile> {
@@ -32,7 +34,7 @@ export async function getSchoolProfile(): Promise<SchoolProfile> {
   const { data, error } = await admin
     .from("school_settings")
     .select(
-      "name, motto, address, phone, email, website, admission_prefix, timetable_days, teacher_clash_check",
+      "name, motto, address, phone, email, website, admission_prefix, timetable_days, teacher_clash_check, attendance_time",
     )
     .maybeSingle();
 
@@ -53,5 +55,6 @@ export async function getSchoolProfile(): Promise<SchoolProfile> {
       .map(Number)
       .sort((a, b) => a - b),
     teacherClashCheck: data.teacher_clash_check as boolean,
+    attendanceTime: String(data.attendance_time ?? "08:30").slice(0, 5),
   };
 }

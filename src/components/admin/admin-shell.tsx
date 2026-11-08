@@ -24,6 +24,7 @@ import {
   Users,
   Wallet,
   X,
+  TrendingUp,
   type LucideIcon,
 } from "lucide-react";
 
@@ -49,6 +50,7 @@ const navigation: NavigationItem[] = [
     section: "School Management",
     area: "students",
   },
+  { label: "Promotion", icon: TrendingUp, href: "/admin/promotion", area: "students" },
   { label: "Teachers & Staff", icon: Users, href: "/admin/staff", area: "staff" },
   { label: "Classes", icon: BookOpen, href: "/admin/classes", area: "classes" },
   { label: "Subjects", icon: Library, href: "/admin/subjects", area: "classes" },
@@ -87,7 +89,7 @@ const navigation: NavigationItem[] = [
   },
   { label: "Grading", icon: Scale, href: "/admin/grading", area: "grading" },
   { label: "Users & Access", icon: UserCog, href: "/admin/users", ownerOnly: true },
-  { label: "Settings", icon: Settings, href: "/admin/settings", ownerOnly: true },
+  { label: "My account", icon: UserRound, href: "/admin/account" },
 ];
 
 // Each item belongs to the heading above it.
@@ -115,6 +117,7 @@ function isVisible(
 }
 
 export function AdminShell({
+  schoolName,
   email,
   roleLabel,
   isOwner,
@@ -122,6 +125,7 @@ export function AdminShell({
   term,
   children,
 }: {
+  schoolName: string;
   email: string;
   roleLabel: string;
   isOwner: boolean;
@@ -173,7 +177,7 @@ export function AdminShell({
               <SchoolLogo size={32} />
             </div>
             <div>
-              <h1 className="text-[13px] font-bold leading-5">Grace & Favour</h1>
+              <h1 className="max-w-[9rem] truncate text-[13px] font-bold leading-5">{schoolName}</h1>
               <p className="text-xs text-white/65">School Management</p>
             </div>
           </div>
@@ -291,7 +295,7 @@ export function AdminShell({
 
             <div className="min-w-0">
               <p className="hidden text-xs font-medium text-[#89938E] sm:block">
-                Grace & Favour Model School
+                {schoolName}
               </p>
               <h2 className="truncate text-base font-bold text-[#203432] sm:mt-1 sm:text-lg">
                 {currentTitle}
