@@ -5,6 +5,7 @@ import { getCurrentTerm } from "@/lib/academic/current-term";
 import { requireStudent } from "@/lib/portal/student";
 import { PortalShell } from "@/components/portal/portal-shell";
 import { getSchoolProfile } from "@/lib/settings/school";
+import { BrandLoader } from "@/components/kit/brand-loader";
 
 async function ShellGate({ children }: { children: ReactNode }) {
   await connection();
@@ -25,7 +26,7 @@ async function ShellGate({ children }: { children: ReactNode }) {
 
 export default function PortalLayout({ children }: { children: ReactNode }) {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F4F7F5]" />}>
+    <Suspense fallback={<BrandLoader />}>
       <ShellGate>{children}</ShellGate>
     </Suspense>
   );

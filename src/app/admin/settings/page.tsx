@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 
 import { requirePageAccess } from "@/lib/auth/access";
 import { getSchoolProfile } from "@/lib/settings/school";
@@ -8,6 +9,7 @@ import { LogoUploader } from "@/components/settings/logo-uploader";
 import { SettingsForm } from "@/components/settings/settings-form";
 
 async function SettingsContent() {
+  await connection();
   await requirePageAccess("super_admin");
 
   const admin = createAdminClient();
@@ -83,19 +85,9 @@ async function SettingsContent() {
   );
 }
 
-function SettingsFallback() {
-  return (
-    <div className="space-y-6 p-6">
-      <div className="h-8 w-40 animate-pulse rounded bg-slate-200" />
-      <div className="h-40 animate-pulse rounded-xl bg-slate-100" />
-      <div className="h-80 animate-pulse rounded-xl bg-slate-100" />
-    </div>
-  );
-}
-
 export default function SettingsPage() {
   return (
-    <Suspense fallback={<SettingsFallback />}>
+    <Suspense fallback={<div className="h-64 animate-pulse bg-slate-100" />}>
       <SettingsContent />
     </Suspense>
   );

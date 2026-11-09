@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { PermanentDeleteButton } from "@/components/admin/permanent-delete-button";
 
 type SubjectRow = {
   id: string;
@@ -119,6 +120,12 @@ async function SubjectsContent() {
                           isActive={subject.is_active}
                           deactivateMessage="It won't be available for new class setups or teacher assignments. Existing results and records stay, and you can reactivate it anytime."
                           reactivateMessage="It will be available again for classes and teacher assignments."
+                        />
+                        <PermanentDeleteButton
+                          url={`/api/admin/subjects/${subject.id}`}
+                          confirmText={subject.name}
+                          title={`Permanently delete ${subject.name}?`}
+                          description="Only a subject with no results can be deleted. Its class ticks, teacher assignments and timetable slots are removed with it. This cannot be undone."
                         />
                       </div>
                       ) : null}

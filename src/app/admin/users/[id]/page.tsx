@@ -10,6 +10,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { ConfirmStatusButton } from "@/components/admin/confirm-status-button";
 import { EditAccessForm } from "@/components/users/edit-access-form";
 import { ResetUserPasswordButton } from "@/components/users/reset-user-password-button";
+import { PermanentDeleteButton } from "@/components/admin/permanent-delete-button";
 
 async function UserContent({ params }: { params: Promise<{ id: string }> }) {
   await requirePageAccess("super_admin");
@@ -142,6 +143,19 @@ async function UserContent({ params }: { params: Promise<{ id: string }> }) {
           deactivateMessage="They won't be able to sign in. You can reactivate them anytime."
           reactivateMessage="They'll be able to sign in again with their current password."
         />
+
+        <div className="mt-5 border-t border-red-100 pt-4">
+          <p className="mb-3 text-sm text-slate-600">
+            Deleting removes this login for good, along with its access ticks.
+          </p>
+          <PermanentDeleteButton
+            url={`/api/admin/users/${id}`}
+            confirmText={email}
+            title={`Permanently delete ${name}?`}
+            description="The login is removed and they can no longer sign in. This cannot be undone. To only block them for now, use Deactivate instead."
+            redirectTo="/admin/users"
+          />
+        </div>
       </section>
     </div>
   );

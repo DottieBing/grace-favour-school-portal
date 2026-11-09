@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
+import { accessErrorResponse, getAccess, getAdminAccess } from "@/lib/auth/access";
+import { readConfirm } from "@/lib/delete/confirm";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const optionalText = (max: number) =>
@@ -144,4 +145,104 @@ export async function PATCH(
   }
 
   return NextResponse.json({ message: "Staff details updated." });
+}
+
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  // Owner-only.
+  const access = await getAccess("super_admin");
+
+  if (!access.ok) return accessErrorResponse(access);
+
+  const { id } = await context.params;
+
+  if (!z.uuid().safeParse(id).success) {
+    return NextResponse.json({ error: "Invalid staff id." }, { status: 400 });
+  }
+
+  const confirm = await readConfirm(request);
+  const admin = createAdminClient();
+
+  const found = await admin
+    .from("staff")
+    .select("staff_number, user_id")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (found.error) {
+    console.error("Unable to load staff:", found.error.message);
+    return NextResponse.json({ error: "Unable to delete the staff member." }, { status: 500 });
+  }
+
+  if (!found.data) {
+    return NextResponse.json({ error: "Staff record not found." }, { status: 404 });
+  }
+
+  const userId = (found.data.user_id as string | null) ?? null;
+
+  if (userId === access.user.id) {
+    return NextResponse.json({ error: "You can't delete your own account." }, { status: 400 });
+  }
+
+  if (userId) {
+    const roles = await admin.from("user_roles").select("role").eq("user_id", userId);
+
+    if (roles.error) {
+      console.error("Unable to check roles:", roles.error.message);
+      return NextResponse.json({ error: "Unable to delete the staff member." }, { status: 500 });
+    }
+
+    if ((roles.data ?? []).some((item) => item.role === "super_admin")) {
+      return NextResponse.json(
+        { error: "Super Admin accounts can't be deleted from this screen." },
+        { status: 403 },
+      );
+    }
+  }
+
+  if (confirm !== found.data.staff_number) {
+    return NextResponse.json(
+      { error: "Type the staff number exactly to confirm." },
+      { status: 400 },
+    );
+  }
+
+  const { data, error } = await admin.rpc("delete_staff_permanently", { p_staff_id: id });
+
+  if (error) {
+    console.error("Deleting the staff member failed:", error.message);
+    return NextResponse.json(
+      { error: "Unable to delete the staff member. Nothing was removed." },
+      { status: 500 },
+    );
+  }
+
+  const result = data as { user_id: string | null; photo_path: string | null };
+
+  if (result.photo_path) {
+    const { error: photoError } = await admin.storage
+      .from("staff-photos")
+      .remove([result.photo_path]);
+
+    if (photoError) console.error("Removing the photo failed:", photoError.message);
+  }
+
+  if (result.user_id) {
+    const { error: loginError } = await admin.auth.admin.deleteUser(result.user_id);
+
+    if (loginError) {
+      console.error("Deleting the login failed:", loginError.message);
+      return NextResponse.json(
+        {
+          error:
+            "The staff record was deleted, but the login couldn't be removed. Delete it in Supabase under Authentication → Users.",
+        },
+        { status: 500 },
+      );
+    }
+  }
+
+  return NextResponse.json({ message: "Staff member deleted." });
 }

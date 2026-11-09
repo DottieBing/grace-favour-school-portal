@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
+import { PermanentDeleteButton } from "@/components/admin/permanent-delete-button";
 
 import { requireAreaAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -76,7 +77,7 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
 }
 
 async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
-  const { canManage, permissions } = await requireAreaAccess("students");
+  const { canManage, permissions, isOwner } = await requireAreaAccess("students");
   const canViewFees = allows(permissions, "fees", "view");
   const { id } = await params;
 
@@ -371,6 +372,15 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
                 name={name}
                 status={status}
               />
+              {isOwner ? (
+                <PermanentDeleteButton
+                  url={`/api/admin/students/${student.id as string}`}
+                  confirmText={student.admission_number as string}
+                  title={`Permanently delete ${name}?`}
+                  description="This removes the student, their login, attendance, results, fee charges, discounts and payments (including uploaded receipts). A parent record shared with other children stays. It cannot be undone. To only stop access, use Change status instead."
+                  redirectTo="/admin/students"
+                />
+              ) : null}
             </div>
           </section>
           ) : null}

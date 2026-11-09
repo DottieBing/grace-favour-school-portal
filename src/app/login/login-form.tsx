@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { resolveLoginIdentifier } from "@/lib/auth/student-login";
+import { Captcha, CAPTCHA_ENABLED } from "@/components/auth/captcha";
+import { SchoolLogo } from "@/components/brand/school-logo";
 import {
   Eye,
   EyeOff,
@@ -13,8 +16,6 @@ import {
   ArrowRight,
   LoaderCircle,
 } from "lucide-react";
-import { SchoolLogo } from "@/components/brand/school-logo";
-import Link from "next/link";
 
 export function LoginForm({ schoolName }: { schoolName: string }) {
   const router = useRouter();
@@ -24,6 +25,8 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [resetSignal, setResetSignal] = useState(0);
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -36,6 +39,11 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
       return;
     }
 
+    if (CAPTCHA_ENABLED && !captchaToken) {
+      setError("Please complete the security check first.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -44,7 +52,12 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
       const { error: loginError } = await supabase.auth.signInWithPassword({
         email,
         password,
+        options: { captchaToken: captchaToken ?? undefined },
       });
+
+      // A token only works once, so always get a fresh one.
+      setCaptchaToken(null);
+      setResetSignal((value) => value + 1);
 
       if (loginError) {
         setError("Incorrect login details. Please try again.");
@@ -54,9 +67,7 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
       let path = "/unauthorized";
 
       try {
-        const response = await fetch("/api/auth/destination", {
-          cache: "no-store",
-        });
+        const response = await fetch("/api/auth/destination", { cache: "no-store" });
 
         if (response.ok) {
           const data = (await response.json()) as { path?: string };
@@ -86,43 +97,23 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
           <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white p-1">
             <SchoolLogo size={40} />
           </div>
-
           <div>
             <p className="text-lg font-semibold">{schoolName}</p>
-            <p className="text-xs tracking-[0.2em] text-white/70">
-              MODEL SCHOOL
-            </p>
           </div>
         </div>
 
         <div className="relative z-10 max-w-xl">
           <div className="mb-6 h-1 w-16 rounded-full bg-[#C9A84C]" />
-
           <h1 className="text-4xl font-semibold leading-tight xl:text-5xl">
             A better way to manage your school.
           </h1>
-
           <p className="mt-6 max-w-md text-base leading-7 text-white/75">
-            One secure place for school administration, student records,
-            attendance, academic results, and fee management.
+            One secure place for school administration, student records, attendance, academic
+            results, and fee management.
           </p>
-
-          <div className="mt-10 flex items-center gap-3">
-            <div className="flex -space-x-2">
-              <div className="h-9 w-9 rounded-full border-2 border-[#0D5C63] bg-[#C9A84C]" />
-              <div className="h-9 w-9 rounded-full border-2 border-[#0D5C63] bg-[#A8D832]" />
-              <div className="h-9 w-9 rounded-full border-2 border-[#0D5C63] bg-white/80" />
-            </div>
-
-            <p className="text-sm text-white/70">
-              Designed for your school community
-            </p>
-          </div>
         </div>
 
-        <p className="relative z-10 text-xs text-white/50">
-          © {new Date().getFullYear()} {schoolName}
-        </p>
+        <p className="relative z-10 text-xs text-white/50">© 2026 {schoolName}</p>
       </section>
 
       <section className="flex flex-1 items-center justify-center px-5 py-12 sm:px-10">
@@ -131,42 +122,32 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
             <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-1">
               <SchoolLogo size={40} />
             </div>
-
-            <h1 className="mt-4 text-xl font-semibold text-slate-900">
-              {schoolName}
-            </h1>
+            <h1 className="mt-4 text-xl font-semibold text-slate-900">{schoolName}</h1>
           </div>
 
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#0D5C63]">
               Welcome back
             </p>
-
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
               Sign in to your account
             </h2>
-
             <p className="mt-3 text-sm leading-6 text-slate-500">
-              Staff sign in with their email. Students and parents sign in with
-              the student&apos;s admission number.
+              Staff sign in with their email. Students and parents sign in with the student&apos;s
+              admission number.
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="mt-9 space-y-5">
             <div>
-              <label
-                htmlFor="identifier"
-                className="mb-2 block text-sm font-medium text-slate-700"
-              >
+              <label htmlFor="identifier" className="mb-2 block text-sm font-medium text-slate-700">
                 Email or admission number
               </label>
-
               <div className="relative">
                 <UserRound
                   size={18}
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
                 />
-
                 <input
                   id="identifier"
                   type="text"
@@ -185,13 +166,10 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
 
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-slate-700"
-                >
+                <label htmlFor="password" className="block text-sm font-medium text-slate-700">
                   Password
                 </label>
-                                <Link
+                <Link
                   href="/forgot-password"
                   className="text-xs font-medium text-[#0D5C63] hover:underline"
                 >
@@ -204,7 +182,6 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
                   size={18}
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
                 />
-
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -215,7 +192,6 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
                   placeholder="Enter your password"
                   className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-12 text-sm outline-none transition focus:border-[#0D5C63] focus:ring-4 focus:ring-[#0D5C63]/10"
                 />
-
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -226,6 +202,8 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
                 </button>
               </div>
             </div>
+
+            <Captcha onToken={setCaptchaToken} resetSignal={resetSignal} />
 
             {error && (
               <div
@@ -256,20 +234,14 @@ export function LoginForm({ schoolName }: { schoolName: string }) {
           </form>
 
           <div className="mt-8 flex items-start gap-3 rounded-xl border border-slate-200 bg-white/70 p-4">
-            <ShieldCheck
-              size={19}
-              className="mt-0.5 shrink-0 text-[#0D5C63]"
-            />
-
+            <ShieldCheck size={19} className="mt-0.5 shrink-0 text-[#0D5C63]" />
             <p className="text-xs leading-5 text-slate-500">
-              Your school account is managed by an authorized administrator.
-              Contact the school if you need help accessing your account.
+              Your school account is managed by an authorized administrator. Contact the school if
+              you need help accessing your account.
             </p>
           </div>
 
-          <p className="mt-8 text-center text-xs text-slate-400">
-            © {new Date().getFullYear()} {schoolName}
-          </p>
+          <p className="mt-8 text-center text-xs text-slate-400">© 2026 {schoolName}</p>
         </div>
       </section>
     </main>

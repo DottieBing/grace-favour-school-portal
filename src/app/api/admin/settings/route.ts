@@ -28,7 +28,7 @@ const schema = z.object({
   timetableDays: z
     .array(z.number().int().min(1).max(7))
     .min(1, "Choose at least one school day for the timetable."),
-    teacherClashCheck: z.boolean(),
+  teacherClashCheck: z.boolean(),
   attendanceTime: z
     .string()
     .regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Enter a valid attendance time."),
@@ -74,10 +74,7 @@ export async function PUT(request: Request) {
 
   if (error) {
     console.error("Saving settings failed:", error.message);
-    return NextResponse.json(
-      { error: "Unable to save the settings." },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Unable to save the settings." }, { status: 500 });
   }
 
   return NextResponse.json({ message: "Settings saved." });

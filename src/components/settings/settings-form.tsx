@@ -121,8 +121,8 @@ export function SettingsForm({ initial }: { initial: SettingsData }) {
         </p>
       </section>
 
-      <section className="space-y-3">
-        <h3 className="text-sm font-semibold text-slate-900">Timetable &amp; attendance</h3>
+      <section className="space-y-4">
+        <h3 className="text-sm font-semibold text-slate-900">Attendance</h3>
         <div className="space-y-1.5 sm:w-1/3">
           <Label htmlFor="s-att">Attendance time</Label>
           <Input
@@ -133,9 +133,14 @@ export function SettingsForm({ initial }: { initial: SettingsData }) {
             onChange={(e) => set("attendanceTime", e.target.value)}
           />
           <p className="text-xs text-slate-500">
-            When teachers&apos; &quot;Take attendance&quot; task starts glowing on their dashboard.
+            From this time, the &quot;Take attendance&quot; task glows on the class teacher&apos;s
+            dashboard. Marking is never blocked before it.
           </p>
         </div>
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="text-sm font-semibold text-slate-900">Timetable</h3>
         <div>
           <p className="mb-2 text-sm text-slate-700">Days the school teaches</p>
           <div className="flex flex-wrap gap-3">

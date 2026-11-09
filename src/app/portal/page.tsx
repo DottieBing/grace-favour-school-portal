@@ -185,7 +185,7 @@ async function HomeContent() {
               </p>
             </div>
             <Link
-              href="/portal/fees"
+              href="/portal/fees#pay"
               className="inline-flex h-10 items-center gap-1.5 rounded-full bg-[#0D5C63] px-5 text-sm font-medium text-white transition hover:bg-[#09494F]"
             >
               {ledger.status === "paid" || ledger.status === "reviewing" ? "View fees" : "Pay now"}

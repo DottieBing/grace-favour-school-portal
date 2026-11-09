@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { readConfirm } from "@/lib/delete/confirm";
 
 const schema = z.object({
   name: z
@@ -99,4 +100,62 @@ export async function PATCH(
   }
 
   return NextResponse.json({ message: "Subject updated." });
+}
+
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  const access = await getAdminAccess("classes", "manage");
+
+  if (!access.ok) {
+    return accessErrorResponse(access);
+  }
+
+  const { id } = await context.params;
+
+  if (!z.uuid().safeParse(id).success) {
+    return NextResponse.json({ error: "Invalid subject id." }, { status: 400 });
+  }
+
+  const confirm = await readConfirm(request);
+  const admin = createAdminClient();
+
+  const found = await admin.from("subjects").select("name").eq("id", id).maybeSingle();
+
+  if (found.error) {
+    console.error("Unable to load subject:", found.error.message);
+    return NextResponse.json({ error: "Unable to delete the subject." }, { status: 500 });
+  }
+
+  if (!found.data) {
+    return NextResponse.json({ error: "Subject not found." }, { status: 404 });
+  }
+
+  if (confirm !== found.data.name) {
+    return NextResponse.json({ error: "Type the subject name exactly to confirm." }, { status: 400 });
+  }
+
+  const { data, error } = await admin.rpc("delete_subject_if_unused", { p_subject_id: id });
+
+  if (error) {
+    console.error("Deleting the subject failed:", error.message);
+    return NextResponse.json({ error: "Unable to delete the subject." }, { status: 500 });
+  }
+
+  if (data === "history") {
+    return NextResponse.json(
+      {
+        error:
+          "Results already exist for this subject, so it can't be deleted. Deactivate it instead.",
+      },
+      { status: 409 },
+    );
+  }
+
+  if (data !== "ok") {
+    return NextResponse.json({ error: "Subject not found." }, { status: 404 });
+  }
+
+  return NextResponse.json({ message: "Subject deleted." });
 }

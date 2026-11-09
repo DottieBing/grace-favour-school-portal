@@ -7,6 +7,7 @@ import { LogOut, type LucideIcon } from "lucide-react";
 
 import { Avatar } from "@/components/kit/avatar";
 import { SchoolLogo } from "@/components/brand/school-logo";
+import { NavProgress } from "@/components/kit/nav-progress";
 
 export type NavItem = {
   href: string;
@@ -53,6 +54,7 @@ export function AppShell({
 
   return (
     <div className="min-h-screen bg-[#F4F7F5] text-[#203432]">
+      <NavProgress />
       <header className="print:hidden sticky top-0 z-30 border-b border-black/5 bg-white/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-4xl items-center gap-3 px-4">
           <Link href={items[0].href} className="flex items-center gap-3">

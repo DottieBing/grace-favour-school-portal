@@ -12,6 +12,7 @@ import {
   StatusButton,
 } from "@/components/staff/staff-profile-actions";
 import { StaffPhoto } from "@/components/staff/staff-photo";
+import { PermanentDeleteButton } from "@/components/admin/permanent-delete-button";
 
 type StaffProfile = {
   id: string;
@@ -53,7 +54,7 @@ function Detail({ label, value }: { label: string; value: string | null }) {
 }
 
 async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
-  const { user, canManage } = await requireAreaAccess("staff");
+  const { user, canManage, isOwner } = await requireAreaAccess("staff");
   const { id } = await params;
 
   if (!z.uuid().safeParse(id).success) {
@@ -281,6 +282,23 @@ async function ProfileContent({ params }: { params: Promise<{ id: string }> }) {
             disabled={Boolean(protectedReason)}
           />
         </div>
+
+        {isOwner && !protectedReason ? (
+          <div className="mt-5 border-t border-red-100 pt-4">
+            <p className="mb-3 text-sm text-slate-600">
+              Deleting removes the record and login for good. Their class assignments are removed, and
+              their timetable slots become &quot;No teacher&quot;. Attendance and results they
+              submitted stay.
+            </p>
+            <PermanentDeleteButton
+              url={`/api/admin/staff/${staff.id}`}
+              confirmText={staff.staff_number}
+              title={`Permanently delete ${name}?`}
+              description="The staff record and login are removed. This cannot be undone. To only stop access, use Deactivate instead."
+              redirectTo="/admin/staff"
+            />
+          </div>
+        ) : null}
       </section>
       ) : null}
     </div>

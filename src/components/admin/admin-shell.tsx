@@ -30,6 +30,7 @@ import {
 
 import { SchoolLogo } from "@/components/brand/school-logo";
 import { allows, type Area, type Permissions } from "@/lib/auth/permissions";
+import { NavProgress } from "@/components/kit/nav-progress";
 
 type NavigationItem = {
   label: string;
@@ -157,6 +158,7 @@ export function AdminShell({
 
   return (
     <div className="min-h-screen bg-[#F6F8F5] text-[#203432]">
+      <NavProgress />
       {mobileOpen && (
         <button
           type="button"

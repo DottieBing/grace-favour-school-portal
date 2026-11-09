@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { admissionNumberToEmail } from "@/lib/auth/student-login";
 import { createClient } from "@/lib/supabase/client";
+import { Captcha, CAPTCHA_ENABLED } from "@/components/auth/captcha";
 
 function PasswordField({
   id,
@@ -58,6 +59,8 @@ export function ChangePasswordForm({ admissionNumber }: { admissionNumber: strin
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [resetSignal, setResetSignal] = useState(0);
 
   const rules = [
     { ok: next.length >= 8, text: "At least 8 characters" },
@@ -78,12 +81,21 @@ export function ChangePasswordForm({ admissionNumber }: { admissionNumber: strin
     setSaving(true);
 
     try {
-      const supabase = createClient();
+            const supabase = createClient();
+
+      if (CAPTCHA_ENABLED && !captchaToken) {
+        setError("Please complete the security check first.");
+        return;
+      }
 
       const { error: checkError } = await supabase.auth.signInWithPassword({
         email: admissionNumberToEmail(admissionNumber),
         password: current,
+        options: { captchaToken: captchaToken ?? undefined },
       });
+
+      setCaptchaToken(null);
+      setResetSignal((value) => value + 1);
 
       if (checkError) {
         setError("Your current password is incorrect.");
@@ -135,6 +147,8 @@ export function ChangePasswordForm({ admissionNumber }: { admissionNumber: strin
           Your password has been changed.
         </p>
       ) : null}
+
+        <Captcha onToken={setCaptchaToken} resetSignal={resetSignal} />
 
       <Button type="submit" disabled={saving} className="rounded-full">
         {saving ? "Saving..." : "Change password"}

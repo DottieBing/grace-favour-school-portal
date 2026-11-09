@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { readConfirm } from "@/lib/delete/confirm";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Enter a name.").max(40).optional(),
@@ -137,4 +138,69 @@ export async function PATCH(
   }
 
   return NextResponse.json({ message: "Component updated." });
+}
+
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  const access = await getAdminAccess("grading", "manage");
+
+  if (!access.ok) {
+    return accessErrorResponse(access);
+  }
+
+  const { id } = await context.params;
+
+  if (!z.uuid().safeParse(id).success) {
+    return NextResponse.json({ error: "Invalid component id." }, { status: 400 });
+  }
+
+  const confirm = await readConfirm(request);
+  const admin = createAdminClient();
+
+  const found = await admin
+    .from("assessment_components")
+    .select("name")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (found.error) {
+    console.error("Unable to load component:", found.error.message);
+    return NextResponse.json({ error: "Unable to delete the component." }, { status: 500 });
+  }
+
+  if (!found.data) {
+    return NextResponse.json({ error: "Component not found." }, { status: 404 });
+  }
+
+  if (confirm !== found.data.name) {
+    return NextResponse.json({ error: "Type the component name exactly to confirm." }, { status: 400 });
+  }
+
+  const used = await admin
+    .from("result_scores")
+    .select("id", { count: "exact", head: true })
+    .eq("component_id", id);
+
+  if (used.error) {
+    console.error("Unable to check scores:", used.error.message);
+    return NextResponse.json({ error: "Unable to delete the component." }, { status: 500 });
+  }
+
+  if ((used.count ?? 0) > 0) {
+    return NextResponse.json(
+      { error: "Scores already use this component, so it can't be deleted. Deactivate it instead." },
+      { status: 409 },
+    );
+  }
+
+  const { error } = await admin.from("assessment_components").delete().eq("id", id);
+
+  if (error) {
+    console.error("Deleting the component failed:", error.message);
+    return NextResponse.json({ error: "Unable to delete the component." }, { status: 500 });
+  }
+
+  return NextResponse.json({ message: "Component deleted." });
 }

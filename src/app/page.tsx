@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
+import { BrandLoader } from "@/components/kit/brand-loader";
 
 async function Router() {
   const supabase = await createClient();
@@ -36,7 +37,7 @@ async function Router() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<BrandLoader />}>
       <Router />
     </Suspense>
   );

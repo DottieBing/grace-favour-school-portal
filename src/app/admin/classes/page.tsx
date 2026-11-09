@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { ClickableRow } from "@/components/admin/clickable-row";
+import { PermanentDeleteButton } from "@/components/admin/permanent-delete-button";
 
 type ClassRow = {
   id: string;
@@ -152,6 +153,12 @@ async function ClassesContent() {
                             isActive={item.is_active}
                             deactivateMessage="The class will be hidden from new work. A class with active students can't be deactivated. Move them first. You can reactivate it anytime."
                             reactivateMessage="The class will be available again."
+                          />
+                          <PermanentDeleteButton
+                            url={`/api/admin/classes/${item.id}`}
+                            confirmText={item.name}
+                            title={`Permanently delete ${item.name}?`}
+                            description="Only a class with no students and no attendance, results, fee or promotion history can be deleted. Its subject ticks, teacher assignments and timetable slots are removed with it. This cannot be undone."
                           />
                         </div>
                         ) : null}

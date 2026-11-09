@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { connection } from "next/server";
 import { getSchoolProfile } from "@/lib/settings/school";
+import { BrandLoader } from "@/components/kit/brand-loader";
 
 async function ShellGate({ children }: { children: ReactNode }) {
   await connection();
@@ -43,7 +44,7 @@ async function ShellGate({ children }: { children: ReactNode }) {
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F6F8F5]" />}>
+    <Suspense fallback={<BrandLoader />}>
       <ShellGate>{children}</ShellGate>
     </Suspense>
   );

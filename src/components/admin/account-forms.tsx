@@ -7,6 +7,7 @@ import { Check, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
+import { Captcha, CAPTCHA_ENABLED } from "@/components/auth/captcha";
 
 export function NameForm({ initialName }: { initialName: string }) {
   const router = useRouter();
@@ -125,6 +126,8 @@ export function PasswordForm({ email }: { email: string }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [resetSignal, setResetSignal] = useState(0);
 
   // Staff logins can reach money and records, so the bar is higher than for students.
   const rules = [
@@ -147,12 +150,21 @@ export function PasswordForm({ email }: { email: string }) {
     setSaving(true);
 
     try {
-      const supabase = createClient();
+            const supabase = createClient();
+
+      if (CAPTCHA_ENABLED && !captchaToken) {
+        setError("Please complete the security check first.");
+        return;
+      }
 
       const { error: checkError } = await supabase.auth.signInWithPassword({
         email,
         password: current,
+        options: { captchaToken: captchaToken ?? undefined },
       });
+
+      setCaptchaToken(null);
+      setResetSignal((value) => value + 1);
 
       if (checkError) {
         setError("Your current password is incorrect.");
@@ -202,6 +214,8 @@ export function PasswordForm({ email }: { email: string }) {
       {done ? (
         <p className="rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800">Your password has been changed.</p>
       ) : null}
+
+      <Captcha onToken={setCaptchaToken} resetSignal={resetSignal} />
 
       <Button type="submit" disabled={saving}>
         {saving ? "Saving..." : "Change password"}

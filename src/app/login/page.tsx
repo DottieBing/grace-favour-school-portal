@@ -3,6 +3,7 @@ import { connection } from "next/server";
 
 import { getSchoolProfile } from "@/lib/settings/school";
 import { LoginForm } from "./login-form";
+import { BrandLoader } from "@/components/kit/brand-loader";
 
 async function Form() {
   await connection();
@@ -13,7 +14,7 @@ async function Form() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F9F8F4]" />}>
+    <Suspense fallback={<BrandLoader />}>
       <Form />
     </Suspense>
   );

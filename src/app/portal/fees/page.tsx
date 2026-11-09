@@ -75,6 +75,7 @@ async function FeesContent() {
     : null;
 
   const paid = ledger.status === "paid";
+  const payable = ledger.status !== "no_charges" && ledger.balance > 0;
   const latest = ledger.payments[0];
 
   return (
@@ -101,14 +102,31 @@ async function FeesContent() {
           <span>Owed {naira(ledger.owed)}</span>
           <span>Paid {naira(ledger.paid)}</span>
         </div>
+
+        {payable ? (
+          <a
+            href="#pay"
+            className="mt-5 inline-flex h-11 items-center rounded-full bg-white px-6 text-sm font-semibold text-[#0D5C63] shadow-sm transition hover:bg-[#F1F8F7]"
+          >
+            Pay now
+          </a>
+        ) : null}
       </section>
 
-      {ledger.status !== "no_charges" && ledger.balance > 0 ? (
+      <div id="pay" className="scroll-mt-24">
         <Card delay={80}>
           <h2 className="mb-4 font-semibold text-slate-900">Make a payment</h2>
-          <PaymentFlow balance={ledger.balance} bank={bank} admissionNumber={student.admissionNumber} />
+          {payable ? (
+            <PaymentFlow balance={ledger.balance} bank={bank} admissionNumber={student.admissionNumber} />
+          ) : (
+            <p className="text-sm text-slate-500">
+              {ledger.status === "no_charges"
+                ? "No fees have been charged yet. The school will charge fees at the start of each term, and the payment steps appear here when there is a balance."
+                : "Nothing is owed right now. Thank you!"}
+            </p>
+          )}
         </Card>
-      ) : null}
+      </div>
 
       {latest && latest.source === "parent" && (latest.status === "reviewing" || latest.status === "verified") ? (
         <Card delay={120}>

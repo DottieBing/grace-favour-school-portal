@@ -7,6 +7,7 @@ import { loadTeacherProfile } from "@/lib/teacher/profile";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { TeacherShell } from "@/components/teacher/teacher-shell";
 import { getSchoolProfile } from "@/lib/settings/school";
+import { BrandLoader } from "@/components/kit/brand-loader";
 
 async function ShellGate({ children }: { children: ReactNode }) {
   await connection();
@@ -34,7 +35,7 @@ async function ShellGate({ children }: { children: ReactNode }) {
 
 export default function TeacherLayout({ children }: { children: ReactNode }) {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F4F7F5]" />}>
+    <Suspense fallback={<BrandLoader />}>
       <ShellGate>{children}</ShellGate>
     </Suspense>
   );

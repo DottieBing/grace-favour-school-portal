@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { readConfirm } from "@/lib/delete/confirm";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Enter the item name.").max(60).optional(),
@@ -87,4 +88,48 @@ export async function PATCH(
   }
 
   return NextResponse.json({ message: "Item updated." });
+}
+
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  const access = await getAdminAccess("fees", "manage");
+
+  if (!access.ok) {
+    return accessErrorResponse(access);
+  }
+
+  const { id } = await context.params;
+
+  if (!z.uuid().safeParse(id).success) {
+    return NextResponse.json({ error: "Invalid item id." }, { status: 400 });
+  }
+
+  const confirm = await readConfirm(request);
+  const admin = createAdminClient();
+
+  const found = await admin.from("fee_items").select("name").eq("id", id).maybeSingle();
+
+  if (found.error) {
+    console.error("Unable to load fee item:", found.error.message);
+    return NextResponse.json({ error: "Unable to delete the item." }, { status: 500 });
+  }
+
+  if (!found.data) {
+    return NextResponse.json({ error: "Item not found." }, { status: 404 });
+  }
+
+  if (confirm !== found.data.name) {
+    return NextResponse.json({ error: "Type the item name exactly to confirm." }, { status: 400 });
+  }
+
+  const { data, error } = await admin.rpc("delete_fee_item", { p_item_id: id });
+
+  if (error || data !== "ok") {
+    if (error) console.error("Deleting the fee item failed:", error.message);
+    return NextResponse.json({ error: "Unable to delete the item." }, { status: 500 });
+  }
+
+  return NextResponse.json({ message: "Item deleted." });
 }

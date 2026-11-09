@@ -5,6 +5,7 @@ import { accessErrorResponse, getAccess } from "@/lib/auth/access";
 import { jobTitleSchema, permissionsSchema } from "@/lib/users/schema";
 import { checkAdminUser } from "@/lib/users/target";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { readConfirm } from "@/lib/delete/confirm";
 
 const schema = z.object({
   jobTitle: jobTitleSchema,
@@ -75,4 +76,65 @@ export async function PATCH(
   }
 
   return NextResponse.json({ message: "Access updated." });
+}
+
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  const access = await getAccess("super_admin");
+
+  if (!access.ok) {
+    return accessErrorResponse(access);
+  }
+
+  const { id } = await context.params;
+
+  if (!z.uuid().safeParse(id).success) {
+    return NextResponse.json({ error: "Invalid user id." }, { status: 400 });
+  }
+
+  const confirm = (await readConfirm(request)).toLowerCase();
+  const admin = createAdminClient();
+  const problem = await checkAdminUser(admin, id, access.user.id);
+
+  if (problem) {
+    return NextResponse.json({ error: problem.message }, { status: problem.status });
+  }
+
+  const [profile, staff] = await Promise.all([
+    admin.from("profiles").select("email").eq("id", id).maybeSingle(),
+    admin.from("staff").select("id").eq("user_id", id).maybeSingle(),
+  ]);
+
+  if (profile.error || staff.error) {
+    console.error("Unable to load user:", profile.error?.message ?? staff.error?.message);
+    return NextResponse.json({ error: "Unable to delete the user." }, { status: 500 });
+  }
+
+  if (staff.data) {
+    return NextResponse.json(
+      { error: "This login belongs to a staff record. Delete the staff record instead." },
+      { status: 409 },
+    );
+  }
+
+  const email = ((profile.data?.email as string | null) ?? "").toLowerCase();
+
+  if (email === "" || confirm !== email) {
+    return NextResponse.json(
+      { error: "Type the user's email exactly to confirm." },
+      { status: 400 },
+    );
+  }
+
+  // Removing the login also removes their role, access ticks and profile.
+  const { error } = await admin.auth.admin.deleteUser(id);
+
+  if (error) {
+    console.error("Deleting the user failed:", error.message);
+    return NextResponse.json({ error: "Unable to delete the user." }, { status: 500 });
+  }
+
+  return NextResponse.json({ message: "User deleted." });
 }

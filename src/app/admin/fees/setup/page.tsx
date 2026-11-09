@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { PermanentDeleteButton } from "@/components/admin/permanent-delete-button";
 
 type TermRaw = {
   id: string;
@@ -231,6 +232,12 @@ async function SetupContent({
                             isActive={item.is_active as boolean}
                             deactivateMessage="It won't count in new charges. Charges already generated keep it. You can reactivate it anytime."
                             reactivateMessage="It will count in new charges again."
+                          />
+                          <PermanentDeleteButton
+                            url={`/api/admin/fees/items/${item.id as string}`}
+                            confirmText={item.name as string}
+                            title={`Permanently delete ${item.name as string}?`}
+                            description="The item is removed from every class's fee structure. Charges already generated keep their amounts. This cannot be undone."
                           />
                         </div>
                       ) : null}

@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { PermanentDeleteButton } from "@/components/admin/permanent-delete-button";
 
 type ComponentRow = {
   id: string;
@@ -147,6 +148,12 @@ async function GradingContent() {
                           isActive={item.is_active}
                           deactivateMessage="It will no longer count toward new results. Scores already entered keep it. You can reactivate it anytime."
                           reactivateMessage="It will count toward new results again."
+                        />
+                        <PermanentDeleteButton
+                          url={`/api/admin/grading/components/${item.id}`}
+                          confirmText={item.name}
+                          title={`Permanently delete ${item.name}?`}
+                          description="Only a component with no scores can be deleted. This cannot be undone."
                         />
                       </div>
                       ) : null}

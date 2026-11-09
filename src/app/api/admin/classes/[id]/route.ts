@@ -5,6 +5,7 @@ import { accessErrorResponse, getAdminAccess } from "@/lib/auth/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkArmRules } from "@/lib/academic/classes";
 import { buildClassName } from "@/lib/academic/levels";
+import { readConfirm } from "@/lib/delete/confirm";
 
 const schema = z.object({
   section: z
@@ -158,4 +159,69 @@ export async function PATCH(
   }
 
   return NextResponse.json({ message: "Class updated." });
+}
+
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  const access = await getAdminAccess("classes", "manage");
+
+  if (!access.ok) {
+    return accessErrorResponse(access);
+  }
+
+  const { id } = await context.params;
+
+  if (!z.uuid().safeParse(id).success) {
+    return NextResponse.json({ error: "Invalid class id." }, { status: 400 });
+  }
+
+  const confirm = await readConfirm(request);
+  const admin = createAdminClient();
+
+  const found = await admin.from("classes").select("name").eq("id", id).maybeSingle();
+
+  if (found.error) {
+    console.error("Unable to load class:", found.error.message);
+    return NextResponse.json({ error: "Unable to delete the class." }, { status: 500 });
+  }
+
+  if (!found.data) {
+    return NextResponse.json({ error: "Class not found." }, { status: 404 });
+  }
+
+  if (confirm !== found.data.name) {
+    return NextResponse.json({ error: "Type the class name exactly to confirm." }, { status: 400 });
+  }
+
+  const { data, error } = await admin.rpc("delete_class_if_unused", { p_class_id: id });
+
+  if (error) {
+    console.error("Deleting the class failed:", error.message);
+    return NextResponse.json({ error: "Unable to delete the class." }, { status: 500 });
+  }
+
+  if (data === "students") {
+    return NextResponse.json(
+      { error: "This class still has students assigned. Move them to another class first." },
+      { status: 409 },
+    );
+  }
+
+  if (data === "history") {
+    return NextResponse.json(
+      {
+        error:
+          "This class has attendance, results, fee or promotion history, so it can't be deleted. Deactivate it instead.",
+      },
+      { status: 409 },
+    );
+  }
+
+  if (data !== "ok") {
+    return NextResponse.json({ error: "Class not found." }, { status: 404 });
+  }
+
+  return NextResponse.json({ message: "Class deleted." });
 }
